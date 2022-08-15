@@ -1,236 +1,193 @@
-﻿using Accelerators.Utils;
-using static Accelerators.Utils.WinApi;
+﻿using SMMTool.Utils.WindowsApi;
+using static SMMTool.Utils.WindowsApi.WinApi;
 
 namespace Accelerators.Processors
 {
     internal class ViberProcessor : Processor
     {
-        private readonly KeysUtils u;
+        private readonly WinApiWrapper u;
 
-        public ViberProcessor(KeysUtils utils)
+        public ViberProcessor(WinApiWrapper utils)
         {
             u = utils;
         }
 
         public void Process(IntPtr hwnd)
         {
-            if (u.KeyIsPressed(VirtualKeyStates.VK_F11))
+
+            // Click on the first chat
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.I_key))
             {
-                var pos = GetCursorPosition();
-
-                int sx = GetSystemMetrics(SM_CXSCREEN);
-                int sy = GetSystemMetrics(SM_CYSCREEN);
-                Rect r = new Rect();
-                GetWindowRect(hwnd, ref r);
-                int leftX = r.Left * 65536 / sx;
-                int rightX = r.Right * 65536 / sx - 1700;
-                int topY = r.Top * 65536 / sy + 200;
-                //int bottomY = r.Bottom * 65536 / sy - 2000;
-                int bottomY = r.Bottom * 65536 / sy - 3300;
-
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightX, topY, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightX, topY, 0, UIntPtr.Zero);
+                u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(80, 165));
             }
 
-            if (u.KeyIsPressed(VirtualKeyStates.J_key) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
-            {
-                var pos = GetCursorPosition();
-
-                int sx = GetSystemMetrics(SM_CXSCREEN);
-                int sy = GetSystemMetrics(SM_CYSCREEN);
-
-                int cursorX = pos.X * 65536 / sx;
-                int cursorY = pos.Y * 65536 / sy;
-
-
-                Rect r = new Rect();
-                GetWindowRect(hwnd, ref r);
-                int leftX = r.Left * 65536 / sx;
-                int rightX = r.Right * 65536 / sx;
-                int topY = r.Top * 65536 / sy;
-                int bottomY = r.Bottom * 65536 / sy;
-                int chatX = leftX + 3200;
-                if (cursorY < topY + 6100) // && cursorX < leftX + 100
-                {
-                    int firstChatY = topY + 6200;
-
-                    mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, firstChatY, 0, UIntPtr.Zero);
-                    mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, firstChatY, 0, UIntPtr.Zero);
-                }
-                else if (cursorY < bottomY - 2617)
-                {
-                    int firstChatY = topY + 6200;
-
-                    mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, cursorY + 2000, 0, UIntPtr.Zero);
-                    mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, cursorY + 2000, 0, UIntPtr.Zero);
-                }
-                else
-                {
-                    mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -100, UIntPtr.Zero);
-                }
-            }
-
-            if (u.KeyIsPressed(VirtualKeyStates.K_key) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
-            {
-                var pos = GetCursorPosition();
-
-                int sx = GetSystemMetrics(SM_CXSCREEN);
-                int sy = GetSystemMetrics(SM_CYSCREEN);
-
-                int cursorX = pos.X * 65536 / sx;
-                int cursorY = pos.Y * 65536 / sy;
-
-
-                Rect r = new Rect();
-                GetWindowRect(hwnd, ref r);
-                int leftX = r.Left * 65536 / sx;
-                int rightX = r.Right * 65536 / sx;
-                int topY = r.Top * 65536 / sy;
-                int bottomY = r.Bottom * 65536 / sy;
-                int chatX = leftX + 3200;
-                if (cursorY < topY + 6100) // && cursorX < leftX + 100
-                {
-                    int firstChatY = topY + 5200;
-
-                    mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, firstChatY, 0, UIntPtr.Zero);
-                    mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, firstChatY, 0, UIntPtr.Zero);
-                }
-                else if (cursorY > topY + 9250)
-                {
-                    int firstChatY = topY + 6200;
-
-                    mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, cursorY - 2000, 0, UIntPtr.Zero);
-                    mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, chatX, cursorY - 2000, 0, UIntPtr.Zero);
-                }
-                else
-                {
-                    mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 100, UIntPtr.Zero);
-                }
-            }
-
-            if (u.KeyIsPressed(VirtualKeyStates.G_key) &&
-                //u.KeyIsPressed(VirtualKeyStates.VK_SHIFT) &&
-                u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
-            {
-                var pos = GetCursorPosition();
-
-                int sx = GetSystemMetrics(SM_CXSCREEN);
-                int sy = GetSystemMetrics(SM_CYSCREEN);
-                Rect r = new Rect();
-                GetWindowRect(hwnd, ref r);
-                int leftX = r.Left * 65536 / sx;
-                int rightX = r.Right * 65536 / sx - 900;
-                int topY = r.Top * 65536 / sy;
-                //int bottomY = r.Bottom * 65536 / sy - 2000;
-                int bottomY = r.Bottom * 65536 / sy - 3300;
-
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightX, bottomY, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightX, bottomY, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -500, UIntPtr.Zero);
-
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightX, bottomY + 1060, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightX, bottomY + 1060, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -500, UIntPtr.Zero);
-            }
-
-            //Next message
-            if (u.KeyIsPressed(VirtualKeyStates.VK_UP) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
+            // Exit
+            if (u.KeysArePressed(VirtualKeyStates.VK_MENU, VirtualKeyStates.Q_key))
             {
                 u.SendKeyDown(VirtualKeyStates.VK_MENU);
-                u.SendKey(VirtualKeyStates.VK_UP);
+                u.SendKey(VirtualKeyStates.VK_F4);
                 u.SendKeyUp(VirtualKeyStates.VK_MENU);
             }
 
-            //Prev message
-            if (u.KeyIsPressed(VirtualKeyStates.VK_DOWN) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
-            {
-                u.SendKeyDown(VirtualKeyStates.VK_MENU);
-                u.SendKey(VirtualKeyStates.VK_DOWN);
-                u.SendKeyUp(VirtualKeyStates.VK_MENU);
-            }
-
-//--------------------------------------
-            // Click on first chat
-            if (u.KeyIsPressed(VirtualKeyStates.I_key) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
-            {
-                Rect r = new Rect();
-                GetWindowRect(hwnd, ref r);
-
-
-                int sx = GetSystemMetrics(SM_CXSCREEN);
-                int sy = GetSystemMetrics(SM_CYSCREEN);
-
-                int leftX = r.Left * 65536 / sx;
-                int topY = r.Top * 65536 / sy;
-
-                int firstChatY = topY + 6200;
-                int firstChatX = leftX + 3200;
-
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, firstChatX, firstChatY, 0, UIntPtr.Zero);
-                Thread.Sleep(100);
-                mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, firstChatX, firstChatY, 0, UIntPtr.Zero);
-            }
+            //// Page Down
+            //if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.D_key))
+            //{
+            //    u.Wait(100).SendKey(VirtualKeyStates.VK_ESCAPE);
+            //    u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(310, 200));
+            //    u.SendKey(VirtualKeyStates.VK_ESCAPE);
+            //    u.SendKey(VirtualKeyStates.VK_ESCAPE);
+            //    u.SendKey(VirtualKeyStates.VK_ESCAPE);
+            //    u.MouseWheel(400);
+            //    //u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(310, 200));
+            //}
 
             // Page Down
-            if (u.KeyIsPressed(VirtualKeyStates.D_key) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.VK_OEM_6))
             {
-                Rect r = new Rect();
-                GetWindowRect(hwnd, ref r);
-
-                int sx = GetSystemMetrics(SM_CXSCREEN);
-                int sy = GetSystemMetrics(SM_CYSCREEN);
-
-                int leftX = r.Left * 65536 / sx;
-                int rightX = r.Right * 65536 / sx;
-                int topY = r.Top * 65536 / sy;
-
-                int firstChatY = topY + 6200;
-                int firstChatX = leftX + 6500;
-
-                //int rightScrollX = rightX - 160;
-                int rightScrollX = leftX + 6600;
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightScrollX, firstChatY, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightScrollX, firstChatY, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -500, UIntPtr.Zero);
+                u.Wait(100);
+                u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(310, 200));
+                u.Wait(50);
+                u.MouseWheel(-400);
             }
 
             // Page Up
-            if (u.KeyIsPressed(VirtualKeyStates.U_key) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.VK_OEM_4))
             {
-                Rect r = new Rect();
-                GetWindowRect(hwnd, ref r);
-
-                int sx = GetSystemMetrics(SM_CXSCREEN);
-                int sy = GetSystemMetrics(SM_CYSCREEN);
-
-                int leftX = r.Left * 65536 / sx;
-                int rightX = r.Right * 65536 / sx;
-                int topY = r.Top * 65536 / sy;
-
-                int firstChatY = topY + 6200;
-                int firstChatX = leftX + 6500;
-
-                //int rightScrollX = rightX - 160; 
-                int rightScrollX = leftX + 6600;
-
-                mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightScrollX, firstChatY, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, rightScrollX, firstChatY, 0, UIntPtr.Zero);
-                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 500, UIntPtr.Zero);
+                u.Wait(100);
+                u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(310, 200));
+                u.Wait(50);
+                u.MouseWheel(400);
+            }
+            // Page Up
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.U_key))
+            {
+                u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(310, 200));
+                u.MouseWheel(400);
             }
 
+            //  Next Chat
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.J_key))
+            {
+                var yPos = u.GetCursorWindowPositionFromTopLeftCornerOfWindow(hwnd).Y;
 
-         
+                var bottom = u.GetWindowHeight(hwnd);
 
-            //if (u.KeyIsPressed(VirtualKeyStates.G_key) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
-            //{
-            //    for (int i = 0; i < 50; i++)
-            //    {
-            //        mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 500, UIntPtr.Zero);
-            //        Thread.Sleep(150);
-            //    }
-            //}
+                var bottomOftheTopPanel = 160;
 
-          
+                var x = 170;
+
+                if (yPos <= bottomOftheTopPanel)
+                {
+                    // Click on the first chat
+                    u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(x, 168));
+                }
+                else if (yPos < u.GetWindowHeight(hwnd) - 140)
+                {
+                    u.Wait(100);
+
+                    // Click on the next chat
+                    u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(x, yPos + 65));
+                }
+                else
+                {
+                    u.Wait(50);
+                    u.MouseWheel(-55);
+                    u.Wait(50);
+                    u.MouseWheel(-55);
+                    u.Wait(50);
+
+                    // Click on the last chat
+                    u.LeftMouseClickRelatedToBottomLeftCornerOfWindow(hwnd, new POINT(x, -50));
+                }
+            }
+
+            //  Prev Chat
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.K_key))
+            {
+                var yPos = u.GetCursorWindowPositionFromTopLeftCornerOfWindow(hwnd).Y;
+
+                var bottom = u.GetWindowHeight(hwnd);
+
+                var bottomOftheTopPanel = 160;
+
+                var x = 170;
+
+                if (yPos <= bottomOftheTopPanel + 86)
+                {
+                    u.Wait(50);
+                    u.MouseWheel(75);
+                    u.Wait(50);
+                    u.MouseWheel(75);
+                    u.Wait(50);
+
+                    u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(x, 200));
+                }
+                else if (yPos < u.GetWindowHeight(hwnd) - 90)
+                {
+                    u.Wait(100);
+
+                    // Click on the next chat
+                    u.LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd, new POINT(x, yPos - 65));
+                }
+                else
+                {
+                    // Click on the last chat
+                    u.LeftMouseClickRelatedToBottomLeftCornerOfWindow(hwnd, new POINT(x, -100));
+                    u.MouseWheel(90);
+                    u.MouseMoveToBottomLeftCornerOfWindow(hwnd, new POINT(x, -100));
+                }
+            }
+
+            // Page Bottom
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.VK_SHIFT, VirtualKeyStates.G_key))
+            {
+                u.LeftMouseClickRelatedToBottomRightCornerOfWindow(hwnd, new POINT(-38, -75));
+                u.LeftMouseClickRelatedToBottomRightCornerOfWindow(hwnd, new POINT(-40, -58));
+            }
+
+            // Page Top
+            if (u.KeysArePressed(VirtualKeyStates.VK_CONTROL, VirtualKeyStates.G_key))
+            {
+                u.MouseMoveToTopLeftCornerOfWindow(hwnd, new POINT(310, 150));
+                for (int i = 0; i < 30; i++)
+                {
+                    u.MouseWheel(500);
+                    u.Wait(200);
+                }
+            }
+
+            // Change Size
+            if (u.KeyIsPressed(VirtualKeyStates.VK_F11))
+            {
+                u.LeftMouseClickRelatedToTopRightCornerOfWindow(hwnd, new POINT(-90, 20));
+            }
+
+            // Min
+            if (u.KeysArePressed(VirtualKeyStates.VK_MENU, VirtualKeyStates.N_key))
+            {
+                //u.SendKey(VirtualKeyStates.VK_ESCAPE);
+                u.LeftMouseClickRelatedToTopRightCornerOfWindow(hwnd, new POINT(-130, 20));
+            }
+
+            // Move
+            if (u.KeysArePressed(VirtualKeyStates.VK_MENU, VirtualKeyStates.M_key))
+            {
+                u.RightMouseClickRelatedToTopRightCornerOfWindow(hwnd, new POINT(-300, 20));
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_RETURN);
+            }
+
+            // Size
+            if (u.KeysArePressed(VirtualKeyStates.VK_MENU, VirtualKeyStates.S_key))
+            {
+                u.RightMouseClickRelatedToTopRightCornerOfWindow(hwnd, new POINT(-300, 20));
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_RETURN);
+            }
+
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Accelerators.Utils;
+﻿using SMMTool.Utils.WindowsApi;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -16,7 +16,7 @@ public enum ToolTipIcon
 /// http://stackoverflow.com/questions/2028466
 /// I hated Microsoft WinForms QA department after I had to develop my own version of the tooltip class,
 /// just to workaround a bug, that would only add ~5 lines of code into the system.windows.forms.dll when fixed properly.</remarks>
-class BalloonToolTip : IDisposable
+public class ToolTip : IDisposable
 {
     #region Unmanaged shit
 
@@ -253,7 +253,7 @@ class BalloonToolTip : IDisposable
 
     IntPtr ownerHandle;
 
-    public BalloonToolTip(IntPtr handle, Rectangle bounds)
+    public ToolTip(IntPtr handle, Rectangle bounds)
     {
         ownerHandle = handle;
 
@@ -281,7 +281,7 @@ class BalloonToolTip : IDisposable
 
         // Create the tooltip control.
         m_wndToolTip = CreateWindowEx(WS_EX_TOPMOST, "tooltips_class32",
-            
+
             string.Empty,
             //WS_OVERLAPPEDWINDOW | WS_VISIBLE,
             WS_POPUP
@@ -290,13 +290,13 @@ class BalloonToolTip : IDisposable
             //TTS_NOPREFIX | 
             //TTS_ALWAYSTIP
             ,
-            
-            CW_USEDEFAULT, 
-            CW_USEDEFAULT, 
-            CW_USEDEFAULT, 
+
             CW_USEDEFAULT,
-            ownerHandle, 
-            
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            CW_USEDEFAULT,
+            ownerHandle,
+
             0, 0, 0);
 
         if (IntPtr.Zero == m_wndToolTip)
@@ -350,7 +350,7 @@ class BalloonToolTip : IDisposable
     {
         //VerifyControlIsAlive();
 
-        if (m_bVisible) Hide();
+        //if (m_bVisible) Hide();
 
         // http://www.deez.info/sengelha/2008/06/12/balloon-tooltips/
         if (!AddTool(m_wndToolTip, m_toolinfo))

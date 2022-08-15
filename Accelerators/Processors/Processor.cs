@@ -1,6 +1,4 @@
-﻿using static Accelerators.Utils.WinApi;
-
-namespace Accelerators.Processors
+﻿namespace Accelerators.Processors
 {
     public abstract class Processor
     {

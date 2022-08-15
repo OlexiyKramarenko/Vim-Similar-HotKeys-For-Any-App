@@ -1,118 +1,163 @@
-﻿using Accelerators.Utils;
-using static Accelerators.Utils.WinApi;
+﻿using SMMTool.Utils.WindowsApi;
+using static SMMTool.Utils.WindowsApi.WinApi;
 
 namespace Accelerators.Processors
 {
     internal class AdobePdfProcessor : Processor
     {
-        private readonly KeysUtils u;
+        private readonly WinApiWrapper u;
+        private readonly TwiceKeyPressHandler _keyPressHandler;
 
-        public AdobePdfProcessor(KeysUtils utils)
+        public AdobePdfProcessor(WinApiWrapper utils, TwiceKeyPressHandler keyPressHandler)
         {
             u = utils;
+            _keyPressHandler = keyPressHandler;
         }
 
         public void Process(IntPtr hwnd)
         {
+            // Left
             if (u.KeyIsPressed(VirtualKeyStates.H_key))
             {
                 u.SendKey(VirtualKeyStates.VK_LEFT);
             }
 
+            // Down
             if (u.KeyIsPressed(VirtualKeyStates.J_key))
             {
                 u.SendKey(VirtualKeyStates.VK_DOWN);
             }
 
+            // Up
             if (u.KeyIsPressed(VirtualKeyStates.K_key))
             {
                 u.SendKey(VirtualKeyStates.VK_UP);
             }
 
+            // Right
             if (u.KeyIsPressed(VirtualKeyStates.L_key))
             {
                 u.SendKey(VirtualKeyStates.VK_RIGHT);
             }
 
-            if (u.KeyIsPressed(VirtualKeyStates.U_key))
+            // Page Up
+            if (u.KeyIsPressed(VirtualKeyStates.U_key) &&
+                u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
             {
                 u.SendKey(VirtualKeyStates.VK_PRIOR);
             }
 
+            // Page Down
             if (u.KeyIsPressed(VirtualKeyStates.D_key))
             {
                 u.SendKey(VirtualKeyStates.VK_NEXT);
             }
 
-            if (u.KeyIsPressed(VirtualKeyStates._5_key))
+            // Start of the line
+            if (u.KeyIsPressed(VirtualKeyStates._4_key))
             {
                 u.SendKey(VirtualKeyStates.VK_HOME);
             }
 
+            // End of the line
             if (u.KeyIsPressed(VirtualKeyStates._8_key))
             {
+                u.LeftMouseClickOnTheCenterOfWindow(hwnd);
+
                 u.SendKey(VirtualKeyStates.VK_END);
             }
 
-
-            if (u.KeyIsPressed(VirtualKeyStates.K_key) && u.KeyIsPressed(VirtualKeyStates.J_key))
+            // Esc
+            if (u.KeyIsPressed(VirtualKeyStates.K_key) &&
+                u.KeyIsPressed(VirtualKeyStates.J_key))
             {
+                u.LeftMouseClickOnTheCenterOfWindow(hwnd);
+
                 u.SendKey(VirtualKeyStates.VK_ESCAPE);
+
             }
 
+            // Undo
+            if (u.KeyIsPressed(VirtualKeyStates.U_key))
+            {
+                u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
+                u.SendKey(VirtualKeyStates.Z_key);
+                u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
+                u.LeftMouseClickOnTheCenterOfWindow(hwnd);
+            }
+
+            // ] Add stick Note
             if (u.KeyIsPressed(VirtualKeyStates.VK_OEM_6))
             {
                 u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
                 u.SendKey(VirtualKeyStates.VK_LEFT);
-                u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
+                u.SendKeyUp(VirtualKeyStates.VK_CONTROL).Wait(100);
 
                 u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
                 u.SendKeyDown(VirtualKeyStates.VK_SHIFT);
                 u.SendKey(VirtualKeyStates.VK_RIGHT);
                 u.SendKeyUp(VirtualKeyStates.VK_SHIFT);
-                u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
+                u.SendKeyUp(VirtualKeyStates.VK_CONTROL).Wait(100);
 
                 u.SendKeyDown(VirtualKeyStates.VK_SHIFT);
                 u.SendKey(VirtualKeyStates.VK_F10);
-                u.SendKeyUp(VirtualKeyStates.VK_SHIFT);
+                u.SendKeyUp(VirtualKeyStates.VK_SHIFT).Wait(100);
 
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_DOWN);
+                u.SendKey(VirtualKeyStates.VK_DOWN);
                 u.SendKey(VirtualKeyStates.VK_DOWN);
                 u.SendKey(VirtualKeyStates.VK_RETURN);
             }
 
+            // [ Highlight
             if (u.KeyIsPressed(VirtualKeyStates.VK_OEM_4))
             {
                 u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
                 u.SendKey(VirtualKeyStates.VK_LEFT);
-                u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
+                u.SendKeyUp(VirtualKeyStates.VK_CONTROL).Wait(100);
 
                 u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
                 u.SendKeyDown(VirtualKeyStates.VK_SHIFT);
                 u.SendKey(VirtualKeyStates.VK_RIGHT);
                 u.SendKeyUp(VirtualKeyStates.VK_SHIFT);
-                u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
+                u.SendKeyUp(VirtualKeyStates.VK_CONTROL).Wait(100);
 
                 u.SendKeyDown(VirtualKeyStates.VK_SHIFT);
                 u.SendKey(VirtualKeyStates.VK_F10);
-                u.SendKeyUp(VirtualKeyStates.VK_SHIFT);
+                u.SendKeyUp(VirtualKeyStates.VK_SHIFT).Wait(100);
 
                 u.SendKey(VirtualKeyStates.VK_DOWN);
                 u.SendKey(VirtualKeyStates.VK_DOWN);
                 u.SendKey(VirtualKeyStates.VK_RETURN);
             }
 
-            u.OnKeyPressedTwice(
+            // GG
+            _keyPressHandler.OnKeyPressedTwice(
                 onKey: VirtualKeyStates.G_key,
-                action: u.SendKey,
+                func: u.SendKey,
                 virtualKey: VirtualKeyStates.VK_PRIOR);
 
-
-            if (u.KeyIsPressed(VirtualKeyStates.G_key) && u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
+            // Ctrl + G
+            if (u.KeyIsPressed(VirtualKeyStates.G_key) &&
+                u.KeyIsPressed(VirtualKeyStates.VK_CONTROL))
             {
                 u.SendKey(VirtualKeyStates.VK_NEXT);
                 u.SendKey(VirtualKeyStates.VK_NEXT);
             }
 
+            // E
+            if (u.KeyIsPressed(VirtualKeyStates.E_key))
+            {
+                u.SendKey(VirtualKeyStates.VK_RIGHT);
+                u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
+                u.SendKey(VirtualKeyStates.VK_RIGHT);
+                u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
+                u.SendKey(VirtualKeyStates.VK_LEFT);
+            }
+
+            // W
             if (u.KeyIsPressed(VirtualKeyStates.W_key))
             {
                 u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
@@ -120,6 +165,8 @@ namespace Accelerators.Processors
                 u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
             }
 
+
+            // B
             if (u.KeyIsPressed(VirtualKeyStates.B_key))
             {
                 u.SendKeyDown(VirtualKeyStates.VK_CONTROL);
@@ -127,39 +174,19 @@ namespace Accelerators.Processors
                 u.SendKeyUp(VirtualKeyStates.VK_CONTROL);
             }
 
-            // Note
-            if (u.KeyIsPressed(VirtualKeyStates.O_key))
+            // Open tree "o"
+            if (u.KeyIsPressed(VirtualKeyStates.O_key) &&
+                u.KeyIsPressed(VirtualKeyStates.VK_LSHIFT))
             {
-                u.SendKeyDown(VirtualKeyStates.VK_SHIFT);
-                u.SendKey(VirtualKeyStates.VK_F10);
-                u.SendKeyUp(VirtualKeyStates.VK_SHIFT);
-                u.SendKey(VirtualKeyStates.VK_DOWN);
-                u.SendKey(VirtualKeyStates.VK_RETURN);
+                u.SendKey(VirtualKeyStates.VK_RIGHT);
             }
 
-            //if (u.KeyIsPressed(VirtualKeyStates.VK_ESCAPE))
-            //{
-            //    //u.SendKeyUp(VirtualKeyStates.VK_SHIFT);
-            //    //u.SendKey(VirtualKeyStates.VK_UP);
-            //    //u.SendKey(VirtualKeyStates.VK_DOWN); 
-            //    //mouse_event(MOUSEEVENTF_LEFTDOWN, 400, 400, 0, UIntPtr.Zero);
-            //    //mouse_event(MOUSEEVENTF_LEFTUP, 400, 400, 0, UIntPtr.Zero);
-            //}
-
-            ////if (u.KeyIsPressed(VirtualKeyStates.H_key) && u.KeyIsPressed(VirtualKeyStates.V_key))
-            ////{
-            ////    u.SendKeyDown(VirtualKeyStates.VK_SHIFT);
-            ////    u.SendKey(VirtualKeyStates.VK_LEFT);
-            ////    //u.SendKeyUp(VirtualKeyStates.VK_SHIFT); 
-            //}
-
-            //if (u.KeyIsPressed(VirtualKeyStates._1_key))
-            //{
-            //    //SendKey(VirtualKeyStates.VK_END);
-            //}
+            // Close node in tree O
+            if (u.KeyIsPressed(VirtualKeyStates.O_key))
+            {
+                u.SendKey(VirtualKeyStates.VK_LEFT);
+            }
 
         }
-
     }
-
 }

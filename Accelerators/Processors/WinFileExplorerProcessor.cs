@@ -1,19 +1,17 @@
-﻿using Accelerators.Utils;
-using static Accelerators.Utils.WinApi;
+﻿using SMMTool.Utils.WindowsApi;
+using static SMMTool.Utils.WindowsApi.WinApi;
 
 namespace Accelerators.Processors
 {
     public class WinFileExplorerProcessor
     {
-        private bool InsertMode;
-        private bool FindMode;
-        private bool NormalMode;
-        private bool VisualMode;
+        private ToolTip _toolTip;
 
+        Mode mode = Mode.Normal;
 
-        private readonly KeysUtils u;
+        private readonly WinApiWrapper u;
 
-        public WinFileExplorerProcessor(KeysUtils utils)
+        public WinFileExplorerProcessor(WinApiWrapper utils)
         {
             u = utils;
         }
@@ -23,79 +21,69 @@ namespace Accelerators.Processors
             Find, Insert, Normal, Visual
         }
 
-        void DisplayTooltip(string text)
+        public void SetTooltip(ToolTip m_ttip)
         {
-
+            _toolTip = m_ttip;
         }
 
-        public void ChangeMode()
+        void DisplayTooltip(string text)
+        {
+            _toolTip.strText = text;
+        }
+
+        public void UpdateMode()
         {
             if (u.KeyIsPressed(VirtualKeyStates.A_key))
             {
+                mode = Mode.Normal;
                 DisplayTooltip("NormalMode");
             }
 
-            if (u.KeyIsPressed(VirtualKeyStates.A_key))
+            if (u.KeyIsPressed(VirtualKeyStates.B_key))
             {
+                mode = Mode.Visual;
                 DisplayTooltip("VisualMode");
             }
 
-            if (u.KeyIsPressed(VirtualKeyStates.A_key))
+            if (u.KeyIsPressed(VirtualKeyStates.C_key))
             {
+                mode = Mode.Insert;
                 DisplayTooltip("InsertMode");
             }
 
-            if (u.KeyIsPressed(VirtualKeyStates.A_key))
+            if (u.KeyIsPressed(VirtualKeyStates.D_key))
             {
+                mode = Mode.Find;
                 DisplayTooltip("FindMode");
             }
-        }
-
-        //Show tooltip
-        void ExplorerToggleInsert()
-        {
         }
 
 
         public void Process(IntPtr hwnd)
         {
-            IntPtr hInstance = System.Diagnostics.Process.GetProcessesByName("explorer").First().Handle;//  GetCurrentProcess(); 
+            UpdateMode();
 
-            IntPtr hwndTip = CreateWindowEx(
-          0,
-          "MyClass", // window caption
-          "MyWindow", // window caption
-          WindowStyles.WS_POPUP | WindowStyles.TTS_ALWAYSTIP | WindowStyles.TTS_BALLOON, // window style
-          0, // initial x position
-          0, // initial y position
-          500, // initial x size
-          500, // initial y size
-          GetParent(hwnd),  // window menu handle
-          IntPtr.Zero,
-          hInstance, //        !!!!!!!   hInstance, // program instance handle
-          IntPtr.Zero); // creation parameters
+            if (mode == Mode.Find)
+            {
+                //if (u.KeyIsPressed(VirtualKeyStates.D_key))
+                //{
+                //    mode = Mode.Find;
+                //    DisplayTooltip("FindMode");
+                //}
+            }
 
-            var tinfo = new TOOLINFO();
-            tinfo.hwnd = hwnd;
-            tinfo.uFlags = 0x0001 | 0x0010;
-            tinfo.uId = hwnd;
-            tinfo.lpszText = "111";
-
-           var  TTM_ACTIVATE = WinApi.WM_USER + 1;
-
-            SendMessage(hwndTip, TTM_ACTIVATE, 1, 0);
-            //SendMessage(hwndTip, TTM_ADDTOOL, 0, (LPARAM) & toolInfo)
-            if (FindMode)
+            if (mode == Mode.Insert)
             {
 
             }
 
-            if (InsertMode)
+
+            if (mode == Mode.Normal)
             {
 
             }
 
-            if (NormalMode)
+            if (mode == Mode.Visual)
             {
 
             }

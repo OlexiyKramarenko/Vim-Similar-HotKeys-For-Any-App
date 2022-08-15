@@ -1,125 +1,137 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Accelerators.Processors;
-using Accelerators.Utils;
+using SMMTool.Utils.WindowsApi;
+using System.Diagnostics;
 using System.Drawing;
 
-Console.WriteLine("Hello, World!");
-
-var adobeProcessor = new AdobePdfProcessor(new KeysUtils());
-var viberProcessor = new ViberProcessor(new KeysUtils());
-var telegramProcessor = new TelegramProcessor(new KeysUtils());
-var skypeProcessor = new SkypeProcessor(new KeysUtils());
-var chromeProcessor = new ChromeProcessor(new KeysUtils());
-var explorerProcessor = new WinFileExplorerProcessor(new KeysUtils());
-var libreProcessor = new LibreOfficeProcessor(new KeysUtils());
-
-
-//var skype = WinApi.FindWindowA("Chrome_WidgetWin_1", null);
-//var bounds = new Rectangle(0, 0, 300, 300);
-//var m_ttip = new BalloonToolTip(skype, bounds);
-
-BalloonToolTip m_ttip = null;
-
-while (true)
+public class Program
 {
-    Thread.Sleep(200);
-    var mpc = WinApi.FindWindowA("MediaPlayerClassicW", null);
-    var explorer = WinApi.FindWindowA("CabinetWClass", null);
-    var viber = WinApi.FindWindowA("Qt624QWindowOwnDCIcon", null);
-    var skype = WinApi.FindWindowA("Chrome_WidgetWin_1", null);
-    var telegram = WinApi.FindWindowA("Qt5153QWindowIcon", null);
-    var adobe = WinApi.FindWindowA("AcrobatSDIWindow", null);
-    var wps = WinApi.FindWindowA("OpusApp", null);
-    var chrome = WinApi.FindWindowA("Intermediate D3D Window", null);
-    var libre = WinApi.FindWindowA("SALFRAME", null);
-
-    var fw = WinApi.GetForegroundWindow();
-
-    if (m_ttip == null)
+    public static void Main(string[] args)
     {
-        var bounds = new Rectangle(0, 0, 300, 300);
-        m_ttip = new BalloonToolTip(skype, bounds);
-        //m_ttip.strTitle = "Balloon #1";
-        //m_ttip.iconResult = ToolTipIcon.Info;
+        var adobeProcessor = new AdobePdfProcessor(new WinApiWrapper(), new TwiceKeyPressHandler(new WinApiWrapper()));
+        var viberProcessor = new ViberProcessor(new WinApiWrapper());
+        var telegramProcessor = new TelegramProcessor(new WinApiWrapper());
+        var skypeProcessor = new SkypeProcessor(new WinApiWrapper());
+        var chromeProcessor = new ChromeProcessor(new WinApiWrapper());
+        var explorerProcessor = new WinFileExplorerProcessor(new WinApiWrapper());
+        var libreProcessor = new LibreOfficeProcessor(new WinApiWrapper());
 
-        m_ttip.Create();
+        ToolTip m_ttip = null;
+
+        while (true)
+        {
+            //Thread.Sleep(100);
+            var mpc = WinApi.FindWindowA("MediaPlayerClassicW", null);
+            var explorer = WinApi.FindWindowA("CabinetWClass", null);
+            var viber = WinApi.FindWindowA("Qt624QWindowOwnDCIcon", null);
+            var telegram = WinApi.FindWindowA("Qt5153QWindowIcon", null);
+            var adobe = WinApi.FindWindowA("AcrobatSDIWindow", null);
+            var wps = WinApi.FindWindowA("OpusApp", null);
+            var libre = WinApi.FindWindowA("SALFRAME", null);
+            var chrome = Get("chrome"); // WinApi.FindWindowA("Chrome_WIdgetWin_1", null);
+            var skype = Get("skype");
+
+            IntPtr fw = WinApi.GetForegroundWindow();
+
+            // = new BalloonToolTip(skype, new Rectangle(0, 0, 300, 300)); 
+
+            if (fw != IntPtr.Zero)
+            {
+
+                if (fw == explorer)
+                {
+                    if (m_ttip == null)
+                    {
+                        m_ttip = new ToolTip(skype, new Rectangle(0, 0, 300, 300));
+                        m_ttip.Create();
+                        //m_ttip.strText = "BB"; 
+                        //var x = new WinApiWrapper().GetWindowLeftX(explorer);
+                        //var y = new WinApiWrapper().GetWindowBottomY(explorer); 
+                        //m_ttip.Show(new Point(x + 5, y - 6)); 
+                        //explorerProcessor.SetTooltip(m_ttip);
+                    }
+
+                    var x = new WinApiWrapper().GetWindowLeftX(explorer);
+                    var y = new WinApiWrapper().GetWindowBottomY(explorer); 
+                    m_ttip.Show(new Point(x + 5, y - 6)); 
+                    explorerProcessor.SetTooltip(m_ttip);
+                    explorerProcessor.Process(explorer);
+                }
+                else if (m_ttip != null)
+                {
+                    m_ttip.Destroy();
+                    m_ttip = null;
+                }
+
+                if (fw == adobe)
+                {
+                    adobeProcessor.Process(adobe);
+                }
+
+                if (fw == viber)
+                {
+                    viberProcessor.Process(viber);
+                }
+
+                if (fw == telegram)
+                {
+                    telegramProcessor.Process(telegram);
+                }
+
+                if (fw == chrome)
+                {
+                    chromeProcessor.Process(chrome);
+                }
+
+                if (fw == libre)
+                {
+                    libreProcessor.Process(libre);
+                }
+
+                if (fw == skype)
+                {
+                    skypeProcessor.Process(skype);
+                }
+            }
+        }
     }
 
-    if (fw == adobe)
+    struct TooltipInfo
     {
-        adobeProcessor.Process(adobe);
-    }
+        public readonly string title;
+        public readonly ToolTipIcon icon;
+        public readonly string message;
 
-    if (fw == viber)
+        public TooltipInfo(string _title, ToolTipIcon _icon, string _message)
+        {
+            title = _title;
+            icon = _icon;
+            message = _message;
+        }
+    }
+    //readonly Dictionary<Control, TooltipInfo> m_ttipMessages;
+
+
+
+
+    public static IntPtr Get(string name)
     {
-        viberProcessor.Process(viber);
-
-        m_ttip.strText = "DD"; 
-        m_ttip.Show(new Point(0, 0));
+        IntPtr hWndChrome = IntPtr.Zero;
+        Process[] processes = Process.GetProcessesByName(name);
+        if (processes.Length > 0)
+        {
+            foreach (Process proc in processes)
+            {
+                if (proc.MainWindowHandle == IntPtr.Zero)
+                    continue;
+                else
+                {
+                    hWndChrome = proc.MainWindowHandle;
+                    break;
+                }
+            }
+        }
+        return hWndChrome;
     }
-
-    if (fw == telegram)
-    {
-        telegramProcessor.Process(telegram);
-
-        m_ttip.strText = "CC"; 
-        m_ttip.Show(new Point(0, 0));
-    }
-
-    if (fw == chrome)
-    {
-        chromeProcessor.Process(chrome); 
-        
-        //m_ttip.strText = "CC";
-        ////m_ttip.strText == "NORMAL" ? "VISUAL" : "NORMAL";
-
-        //m_ttip.Show(new Point(0, 0));
-
-        ////m_ttip.Hide();
-        ////m_ttip.strText = "VISUAL"; 
-        ////m_ttip.Show(new Point(0, 0));
-    }
-
-    if (fw == explorer)
-    {
-        explorerProcessor.Process(explorer); 
-        
-        m_ttip.strText = "BB"; 
-        m_ttip.Show(new Point(0, 0));
-    }
-
-    if (fw == libre)
-    {
-        libreProcessor.Process(chrome);
-    }
-
-
-
-    if (fw == skype)
-    {
-        skypeProcessor.Process(skype);
-
-        m_ttip.strText = "AA"; 
-        m_ttip.Show(new Point(0, 0));
-    }
-    //else
-    //{
-    //    m_ttip.Hide();
-    //}
 
 }
-
-struct TooltipInfo
-{
-    public readonly string title;
-    public readonly ToolTipIcon icon;
-    public readonly string message;
-
-    public TooltipInfo(string _title, ToolTipIcon _icon, string _message)
-    {
-        title = _title;
-        icon = _icon;
-        message = _message;
-    }
-}
-//readonly Dictionary<Control, TooltipInfo> m_ttipMessages;

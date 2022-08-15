@@ -1,8 +1,7 @@
-﻿using System.Text;
+﻿using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Drawing;
 
-namespace Accelerators.Utils
+namespace SMMTool.Utils.WindowsApi
 {
     public class WinApi
     {
@@ -22,8 +21,6 @@ namespace Accelerators.Utils
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindowA(string lpClassName, string lpWindowName);
 
-
-
         /// <summary>
         ///     Retrieves a handle to the foreground window (the window with which the user is currently working). The system
         ///     assigns a slightly higher priority to the thread that creates the foreground window than it does to other threads.
@@ -35,7 +32,6 @@ namespace Accelerators.Utils
         /// </returns>
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
-
 
         [Flags]
         public enum MouseEventFlags : uint
@@ -61,6 +57,7 @@ namespace Accelerators.Utils
             XBUTTON1 = 0x00000001,
             XBUTTON2 = 0x00000002
         }
+
         public static int SM_CXSCREEN = 0;
         public static int SM_CYSCREEN = 1;
 
@@ -78,14 +75,15 @@ namespace Accelerators.Utils
         public const uint MOUSEEVENTF_XUP = 0x0100;
         public const uint MOUSEEVENTF_WHEEL = 0x0800;
         public const uint MOUSEEVENTF_HWHEEL = 0x01000;
+
         [DllImport("user32.dll")]
         public static extern void mouse_event(uint dwFlags, int dx, int dy, int dwData, UIntPtr dwExtraInfo);
 
         public const uint KEYEVENTF_EXTENDEDKEY = 0x0001;
         public const uint KEYEVENTF_KEYUP = 0x0002;
+
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-
 
         public enum VirtualKeyStates : int
         {
@@ -314,10 +312,13 @@ namespace Accelerators.Utils
         }
         [DllImport("User32.dll")]
         public static extern short GetAsyncKeyState(int vKey);
+
         [DllImport("USER32.dll")]
         private static extern short GetKeyState(VirtualKeyStates nVirtKey);
+
         [DllImport("user32.dll")]
         public static extern int GetKeyboardState(byte[] keystate);
+
         [Flags]
         private enum KeyStates
         {
@@ -325,33 +326,7 @@ namespace Accelerators.Utils
             Down = 1,
             Toggled = 2
         }
-        //private static KeyStates GetKeyState(Keys key)
-        //{
-        //    KeyStates state = KeyStates.None;
 
-        //    short retVal = GetKeyState((int)key);
-
-        //    //If the high-order bit is 1, the key is down
-        //    //otherwise, it is up.
-        //    if ((retVal & 0x8000) == 0x8000)
-        //        state |= KeyStates.Down;
-
-        //    //If the low-order bit is 1, the key is toggled.
-        //    if ((retVal & 1) == 1)
-        //        state |= KeyStates.Toggled;
-
-        //    return state;
-        //}
-
-        //public static bool IsKeyDown(Keys key)
-        //{
-        //    return KeyStates.Down == (GetKeyState(key) & KeyStates.Down);
-        //}
-
-        //public static bool IsKeyToggled(Keys key)
-        //{
-        //    return KeyStates.Toggled == (GetKeyState(key) & KeyStates.Toggled);
-        //}
         public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
         public static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
         public static readonly IntPtr HWND_TOP = new IntPtr(0);
@@ -391,6 +366,7 @@ namespace Accelerators.Utils
             DEFERERASE = 0x2000,
             ASYNCWINDOWPOS = 0x4000;
         }
+
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SetWindowPosFlags uFlags);
 
@@ -455,18 +431,6 @@ namespace Accelerators.Utils
             ShowWindow = 0x0040,
         }
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, nuint wParam, StringBuilder lParam);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, nuint wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, nuint wParam, ref nint lParam);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, nuint wParam, nint lParam);
-
         /// <summary>
         /// Struct representing a point.
         /// </summary>
@@ -475,6 +439,11 @@ namespace Accelerators.Utils
         {
             public int X;
             public int Y;
+            public POINT(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
 
             public static implicit operator Point(POINT point)
             {
@@ -488,17 +457,6 @@ namespace Accelerators.Utils
         /// <see>See MSDN documentation for further information.</see>
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out POINT lpPoint);
-
-        public static Point GetCursorPosition()
-        {
-            POINT lpPoint;
-            GetCursorPos(out lpPoint);
-            // NOTE: If you need error handling
-            // bool success = GetCursorPos(out lpPoint);
-            // if (!success)
-
-            return lpPoint;
-        }
 
         public struct TOOLINFO
         {
@@ -687,7 +645,19 @@ namespace Accelerators.Utils
             WS_EX_WINDOWEDGE = 0x00000100
         }
 
-public static  uint WM_USER      = 0x0400;
+        [DllImport("user32.dll")]
+        public static extern int SendMessageW([In] IntPtr hWnd, int Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+
+        [DllImport("User32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, string lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        public static uint WM_USER = 0x0400;
+
+        public static int WM_SETTEXT = 0x000C;
 
         [Flags()]
         public enum WindowStyles : uint
@@ -773,6 +743,6 @@ public static  uint WM_USER      = 0x0400;
 
             /// <summary>The window has a vertical scroll bar.</summary>
             WS_VSCROLL = 0x200000
-        } 
+        }
     }
 }
