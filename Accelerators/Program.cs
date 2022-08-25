@@ -8,15 +8,21 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var adobeProcessor = new AdobePdfProcessor(new WinApiWrapper(), new TwiceKeyPressHandler(new WinApiWrapper()));
-        var viberProcessor = new ViberProcessor(new WinApiWrapper());
-        var telegramProcessor = new TelegramProcessor(new WinApiWrapper());
-        var skypeProcessor = new SkypeProcessor(new WinApiWrapper());
-        var chromeProcessor = new ChromeProcessor(new WinApiWrapper());
-        var explorerProcessor = new WinFileExplorerProcessor(new WinApiWrapper());
-        var libreProcessor = new LibreOfficeProcessor(new WinApiWrapper());
+        var winApi = new WinApiWrapper();
+        var adobeProcessor = new AdobePdfProcessor(winApi);
+        var viberProcessor = new ViberProcessor(winApi);
+        var telegramProcessor = new TelegramProcessor(winApi);
+        var skypeProcessor = new SkypeProcessor(winApi);
+        var chromeProcessor = new ChromeProcessor(winApi);
+        var explorerProcessor = new FileExplorerProcessor(winApi);
+        var libreProcessor = new LibreOfficeProcessor(winApi);
+
+
+
 
         ToolTip m_ttip = null;
+
+
 
         while (true)
         {
@@ -33,30 +39,29 @@ public class Program
 
             IntPtr fw = WinApi.GetForegroundWindow();
 
-            // = new BalloonToolTip(skype, new Rectangle(0, 0, 300, 300)); 
-
             if (fw != IntPtr.Zero)
-            {
-
+            {             
+                
                 if (fw == explorer)
                 {
                     if (m_ttip == null)
                     {
-                        m_ttip = new ToolTip(skype, new Rectangle(0, 0, 300, 300));
+                        m_ttip = new ToolTip(explorer, new Rectangle(0, 0, 300, 300));
                         m_ttip.Create();
-                        //m_ttip.strText = "BB"; 
-                        //var x = new WinApiWrapper().GetWindowLeftX(explorer);
-                        //var y = new WinApiWrapper().GetWindowBottomY(explorer); 
-                        //m_ttip.Show(new Point(x + 5, y - 6)); 
-                        //explorerProcessor.SetTooltip(m_ttip);
                     }
 
                     var x = new WinApiWrapper().GetWindowLeftX(explorer);
-                    var y = new WinApiWrapper().GetWindowBottomY(explorer); 
-                    m_ttip.Show(new Point(x + 5, y - 6)); 
+                    var y = new WinApiWrapper().GetWindowBottomY(explorer);
+
                     explorerProcessor.SetTooltip(m_ttip);
+                    m_ttip.Show(new Point(x + 5, y - 6));
+
+
+
                     explorerProcessor.Process(explorer);
                 }
+
+
                 else if (m_ttip != null)
                 {
                     m_ttip.Destroy();
@@ -95,23 +100,6 @@ public class Program
             }
         }
     }
-
-    struct TooltipInfo
-    {
-        public readonly string title;
-        public readonly ToolTipIcon icon;
-        public readonly string message;
-
-        public TooltipInfo(string _title, ToolTipIcon _icon, string _message)
-        {
-            title = _title;
-            icon = _icon;
-            message = _message;
-        }
-    }
-    //readonly Dictionary<Control, TooltipInfo> m_ttipMessages;
-
-
 
 
     public static IntPtr Get(string name)

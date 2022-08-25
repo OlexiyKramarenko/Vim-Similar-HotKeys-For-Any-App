@@ -21,6 +21,9 @@ namespace SMMTool.Utils.WindowsApi
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindowA(string lpClassName, string lpWindowName);
 
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, string lclassName, string windowTitle);
+
         /// <summary>
         ///     Retrieves a handle to the foreground window (the window with which the user is currently working). The system
         ///     assigns a slightly higher priority to the thread that creates the foreground window than it does to other threads.
@@ -32,6 +35,15 @@ namespace SMMTool.Utils.WindowsApi
         /// </returns>
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetActiveWindow(IntPtr hWnd);
+        
+        [DllImport("user32.dll", SetLastError = true)]
+        public  static extern IntPtr SetFocus(IntPtr hWnd);
 
         [Flags]
         public enum MouseEventFlags : uint
@@ -85,7 +97,7 @@ namespace SMMTool.Utils.WindowsApi
         [DllImport("user32.dll")]
         public static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
-        public enum VirtualKeyStates : int
+        public enum VirtualKey : int
         {
             _0_key = 0x30,
             _1_key = 0x31,
@@ -314,7 +326,7 @@ namespace SMMTool.Utils.WindowsApi
         public static extern short GetAsyncKeyState(int vKey);
 
         [DllImport("USER32.dll")]
-        private static extern short GetKeyState(VirtualKeyStates nVirtKey);
+        private static extern short GetKeyState(VirtualKey nVirtKey);
 
         [DllImport("user32.dll")]
         public static extern int GetKeyboardState(byte[] keystate);
@@ -655,9 +667,16 @@ namespace SMMTool.Utils.WindowsApi
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
+        [DllImport("User32.Dll", EntryPoint = "PostMessageA")]
+        public static extern bool PostMessage(IntPtr hWnd, uint msg, int wParam, int lParam);
+
         public static uint WM_USER = 0x0400;
 
         public static int WM_SETTEXT = 0x000C;
+
+        public static int WM_NEXTDLGCTL = 0x0028;
+
+        public static int WM_ACTIVATE = 0x0006;
 
         [Flags()]
         public enum WindowStyles : uint

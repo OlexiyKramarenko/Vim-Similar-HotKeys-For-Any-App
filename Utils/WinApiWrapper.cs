@@ -28,32 +28,36 @@ namespace SMMTool.Utils.WindowsApi
             return lpPoint;
         }
 
-        public void MouseMoveToBottomLeftCornerOfWindow(IntPtr hwnd, POINT point)
+        public WinApiWrapper MouseMoveToBottomLeftCornerOfWindow(IntPtr hwnd, POINT point)
         {
             MouseMove(
                x: GetWindowLeftX(hwnd) + point.X,
                y: GetWindowBottomY(hwnd) + point.Y);
+            return this;
         }
 
-        public void MouseMoveToBottomRightCornerOfWindow(IntPtr hwnd, POINT point)
+        public WinApiWrapper MouseMoveToBottomRightCornerOfWindow(IntPtr hwnd, POINT point)
         {
             MouseMove(
                x: GetWindowRightX(hwnd) + point.X,
                y: GetWindowBottomY(hwnd) + point.Y);
+            return this;
         }
 
-        public void MouseMoveToTopRightCornerOfWindow(IntPtr hwnd, POINT point)
+        public WinApiWrapper MouseMoveToTopRightCornerOfWindow(IntPtr hwnd, POINT point)
         {
             MouseMove(
                x: GetWindowRightX(hwnd) + point.X,
                y: GetWindowTopY(hwnd) + point.Y);
+            return this;
         }
 
-        public void MouseMoveToTopLeftCornerOfWindow(IntPtr hwnd, POINT point)
+        public WinApiWrapper MouseMoveToTopLeftCornerOfWindow(IntPtr hwnd, POINT point)
         {
             MouseMove(
                x: GetWindowLeftX(hwnd) + point.X,
                y: GetWindowTopY(hwnd) + point.Y);
+            return this;
         }
 
         public int XScreenToWindow(int screenX)
@@ -70,18 +74,20 @@ namespace SMMTool.Utils.WindowsApi
             return windowY;
         }
 
-        private void MouseMove(int x, int y)
+        private WinApiWrapper MouseMove(int x, int y)
         {
             int sx = GetSystemMetrics(SM_CXSCREEN);
             int sy = GetSystemMetrics(SM_CYSCREEN);
             int dx = x * 65536 / sx;
             int dy = y * 65536 / sy;
             mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, dx, dy, dwData: 0, UIntPtr.Zero);
+            return this;
         }
 
-        public void MouseWheel(int distance)
+        public WinApiWrapper MouseWheel(int distance)
         {
             mouse_event(MOUSEEVENTF_WHEEL, 0, 0, distance, UIntPtr.Zero);
+            return this;
         }
 
         public WinApiWrapper LeftClickOnCursorPos()
@@ -98,7 +104,7 @@ namespace SMMTool.Utils.WindowsApi
             return this;
         }
 
-        public WinApiWrapper SendKeys(VirtualKeyStates holdKey, VirtualKeyStates pressKey)
+        public WinApiWrapper SendKeys(VirtualKey holdKey, VirtualKey pressKey)
         {
             SendKeyDown(holdKey);
             SendKey(pressKey);
@@ -106,32 +112,32 @@ namespace SMMTool.Utils.WindowsApi
             return this;
         }
 
-        public WinApiWrapper SendKey(VirtualKeyStates key)
+        public WinApiWrapper SendKey(VirtualKey key)
         {
             SendKeyDown(key);
             SendKeyUp(key);
             return this;
         }
 
-        public WinApiWrapper SendKeyDown(VirtualKeyStates key)
+        public WinApiWrapper SendKeyDown(VirtualKey key)
         {
             WinApi.keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | 0, UIntPtr.Zero);
             return this;
         }
 
-        public WinApiWrapper SendKeyUp(VirtualKeyStates key)
+        public WinApiWrapper SendKeyUp(VirtualKey key)
         {
             WinApi.keybd_event((byte)key, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, UIntPtr.Zero);
             return this;
         }
 
-        public bool KeyIsPressed(VirtualKeyStates key) =>
+        public bool KeyIsPressed(VirtualKey key) =>
             (WinApi.GetAsyncKeyState((int)key) & 0x8000) != 0;
 
-        public bool KeysArePressed(VirtualKeyStates key1, VirtualKeyStates key2) =>
+        public bool KeysArePressed(VirtualKey key1, VirtualKey key2) =>
             KeyIsPressed(key2) && KeyIsPressed(key1);
 
-        public bool KeysArePressed(VirtualKeyStates key1, VirtualKeyStates key2, VirtualKeyStates key3) =>
+        public bool KeysArePressed(VirtualKey key1, VirtualKey key2, VirtualKey key3) =>
             KeysArePressed(key1, key2) && KeyIsPressed(key3);
 
         public WinApiWrapper SendText(IntPtr programHandle, string text)
@@ -192,18 +198,18 @@ namespace SMMTool.Utils.WindowsApi
         //public WinApiWrapper RightMouseClickRelatedToTopRightCornerOfScreen(POINT p) =>
         //   RightMouseClick(p.X, p.Y);
 
-        public WinApiWrapper RightMouseClickRelatedToTopLeftCornerOfScreen(POINT p) =>
+        private WinApiWrapper RightMouseClickRelatedToTopLeftCornerOfScreen(POINT p) =>
             RightMouseClick(p.X, p.Y);
 
-        public WinApiWrapper RightMouseClick(int x, int y) =>
+        private WinApiWrapper RightMouseClick(int x, int y) =>
             MouseClick(x, y, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
 
         public int GetWindowBottomY(IntPtr hwnd) => GetWindowRect(hwnd).Bottom;
-        public int GetWindowTopY(IntPtr hwnd) => GetWindowRect(hwnd).Top;
+        private int GetWindowTopY(IntPtr hwnd) => GetWindowRect(hwnd).Top;
         public int GetWindowLeftX(IntPtr hwnd) => GetWindowRect(hwnd).Left;
-        public int GetWindowRightX(IntPtr hwnd) => GetWindowRect(hwnd).Right;
+        private int GetWindowRightX(IntPtr hwnd) => GetWindowRect(hwnd).Right;
 
-        public int GetWindowWidth(IntPtr hwnd) => GetWindowRightX(hwnd) - GetWindowLeftX(hwnd);
+        private int GetWindowWidth(IntPtr hwnd) => GetWindowRightX(hwnd) - GetWindowLeftX(hwnd);
         public int GetWindowHeight(IntPtr hwnd) => GetWindowBottomY(hwnd) - GetWindowTopY(hwnd);
 
         public WinApiWrapper SetWindowPos(IntPtr hwnd, POINT topLeftAppWindowCorner, int width, int height)

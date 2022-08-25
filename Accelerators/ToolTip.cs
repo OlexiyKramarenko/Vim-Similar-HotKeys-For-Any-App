@@ -12,10 +12,6 @@ public enum ToolTipIcon
     Error
 }
 
-/// <remarks>This classes implements the balloon tooltip.
-/// http://stackoverflow.com/questions/2028466
-/// I hated Microsoft WinForms QA department after I had to develop my own version of the tooltip class,
-/// just to workaround a bug, that would only add ~5 lines of code into the system.windows.forms.dll when fixed properly.</remarks>
 public class ToolTip : IDisposable
 {
     #region Unmanaged shit

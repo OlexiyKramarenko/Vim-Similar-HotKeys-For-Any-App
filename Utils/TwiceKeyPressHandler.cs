@@ -14,9 +14,9 @@ namespace SMMTool.Utils.WindowsApi
         } 
 
         public void OnKeyPressedTwice(
-                            VirtualKeyStates onKey,
-                            Func<VirtualKeyStates, WinApiWrapper> func,
-                            VirtualKeyStates virtualKey)
+                            VirtualKey onKey,
+                            Func<VirtualKey, WinApiWrapper> func,
+                            VirtualKey virtualKey)
         {
             if (_winApiWrapper.KeyIsPressed(onKey))
             {
