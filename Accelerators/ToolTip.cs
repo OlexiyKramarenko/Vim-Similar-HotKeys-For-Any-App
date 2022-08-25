@@ -3,19 +3,31 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-
-public enum ToolTipIcon
-{
-    None,
-    Info,
-    Warning,
-    Error
-}
-
 public class ToolTip : IDisposable
 {
-    #region Unmanaged shit
+    public enum ToolTipIcon
+    {
+        None,
+        Info,
+        Warning,
+        Error
+    }
 
+    private static ToolTip _toolTip;
+    public static ToolTip Instance(IntPtr hwnd, string text)
+    {
+        if (_toolTip == null)
+        {
+            _toolTip = new ToolTip(hwnd, new Rectangle(0, 0, 300, 300));
+            _toolTip.Create();
+        }
+
+        _toolTip.strText = text;
+
+        return _toolTip;
+    }
+
+    #region Unmanaged code
     [DllImport("user32.dll")]
     static extern IntPtr CreateWindowEx(int exstyle, string classname, string windowtitle,
         int style, int x, int y, int width, int height, IntPtr parent,

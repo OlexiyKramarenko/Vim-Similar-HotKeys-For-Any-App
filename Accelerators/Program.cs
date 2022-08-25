@@ -17,16 +17,8 @@ public class Program
         var explorerProcessor = new FileExplorerProcessor(winApi);
         var libreProcessor = new LibreOfficeProcessor(winApi);
 
-
-
-
-        ToolTip m_ttip = null;
-
-
-
         while (true)
         {
-            //Thread.Sleep(100);
             var mpc = WinApi.FindWindowA("MediaPlayerClassicW", null);
             var explorer = WinApi.FindWindowA("CabinetWClass", null);
             var viber = WinApi.FindWindowA("Qt624QWindowOwnDCIcon", null);
@@ -40,32 +32,10 @@ public class Program
             IntPtr fw = WinApi.GetForegroundWindow();
 
             if (fw != IntPtr.Zero)
-            {             
-                
+            {
                 if (fw == explorer)
                 {
-                    if (m_ttip == null)
-                    {
-                        m_ttip = new ToolTip(explorer, new Rectangle(0, 0, 300, 300));
-                        m_ttip.Create();
-                    }
-
-                    var x = new WinApiWrapper().GetWindowLeftX(explorer);
-                    var y = new WinApiWrapper().GetWindowBottomY(explorer);
-
-                    explorerProcessor.SetTooltip(m_ttip);
-                    m_ttip.Show(new Point(x + 5, y - 6));
-
-
-
                     explorerProcessor.Process(explorer);
-                }
-
-
-                else if (m_ttip != null)
-                {
-                    m_ttip.Destroy();
-                    m_ttip = null;
                 }
 
                 if (fw == adobe)

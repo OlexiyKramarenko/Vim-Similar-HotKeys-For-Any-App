@@ -1,5 +1,6 @@
 ﻿using Accelerators.Handlers.FileExplorer.Modes;
 using SMMTool.Utils.WindowsApi;
+using System.Drawing;
 using Find = Accelerators.FileExplorer.Modes.Find;
 using Insert = Accelerators.FileExplorer.Modes.Insert;
 using Normal = Accelerators.FileExplorer.Modes.Normal;
@@ -9,18 +10,21 @@ namespace Accelerators.Processors
     public class FileExplorerProcessor
     {
 
-        private ToolTip _toolTip;
-        private WinApiWrapper _winApiWrapper;
+        private WinApiWrapper _winApi;
 
-        public FileExplorerProcessor(WinApiWrapper winApiWrapper)
+        public FileExplorerProcessor(WinApiWrapper winApi)
         {
-            _winApiWrapper = winApiWrapper;
+            _winApi = winApi;
         }
 
 
         public void Process(IntPtr hwnd)
         {
             Thread.Sleep(70);
+
+            ToolTip
+              .Instance(hwnd, ModeContext.Instance.ModeName)
+              .Show(TooltipLocation(hwnd));
 
             var chain =
             new Find.Escape(
@@ -55,22 +59,15 @@ namespace Accelerators.Processors
                                          new Normal.SelectDownwards(
                                           new Normal.SelectUpwards(
                                            new Normal.Undo())))))))))))))))))))))))))))))));
-
-            chain.Handle(hwnd, _winApiWrapper);
-
-            DisplayTooltip(ModeContext.Instance.ModeName);
+            chain.Handle(hwnd, _winApi);
         }
 
 
-        public void SetTooltip(ToolTip m_ttip)
+        private Point TooltipLocation(IntPtr hwnd)
         {
-            _toolTip = m_ttip;
-        }
-
-
-        private void DisplayTooltip(string text)
-        {
-            _toolTip.strText = text;
+            var x = _winApi.GetWindowLeftX(hwnd);
+            var y = _winApi.GetWindowBottomY(hwnd);
+            return new Point(x + 5, y - 6);
         }
 
     }
