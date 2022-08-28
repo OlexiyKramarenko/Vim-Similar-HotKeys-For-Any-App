@@ -1,9 +1,9 @@
 ﻿using Accelerators.Handlers.LibreOffice;
 using SMMTool.Utils.WindowsApi;
 
-namespace Accelerators.Processors
+namespace Accelerators.Processors.Implementation
 {
-    public class LibreOfficeProcessor
+    public class LibreOfficeProcessor : IProcessor
     {
 
         private readonly WinApiWrapper _winApi;

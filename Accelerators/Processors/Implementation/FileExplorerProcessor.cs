@@ -5,9 +5,9 @@ using Find = Accelerators.FileExplorer.Modes.Find;
 using Insert = Accelerators.FileExplorer.Modes.Insert;
 using Normal = Accelerators.FileExplorer.Modes.Normal;
 
-namespace Accelerators.Processors
+namespace Accelerators.Processors.Implementation
 {
-    public class FileExplorerProcessor
+    public class FileExplorerProcessor : IProcessor
     {
 
         private WinApiWrapper _winApi;

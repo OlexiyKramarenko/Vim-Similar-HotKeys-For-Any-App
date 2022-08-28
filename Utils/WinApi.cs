@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace SMMTool.Utils.WindowsApi
@@ -38,12 +39,41 @@ namespace SMMTool.Utils.WindowsApi
 
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
-        
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        private static Process GetForegroundProcess()
+        {
+            uint processID;
+            IntPtr hWnd = WinApi.GetForegroundWindow();
+            GetWindowThreadProcessId(hWnd, out processID);
+            Process fgProc = Process.GetProcessById(Convert.ToInt32(processID));
+            return fgProc;
+        }
+
+        public static IntPtr GetHwndOfForegroundProcessByName(string name)
+        {
+            Process process = GetForegroundProcess();
+
+            if (process is null)
+            {
+                return IntPtr.Zero;
+            }
+
+            if (process.ProcessName == name)
+            {
+                return process.MainWindowHandle;
+            }
+
+            return IntPtr.Zero;
+        }
+
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr SetActiveWindow(IntPtr hWnd);
-        
+
         [DllImport("user32.dll", SetLastError = true)]
-        public  static extern IntPtr SetFocus(IntPtr hWnd);
+        public static extern IntPtr SetFocus(IntPtr hWnd);
 
         [Flags]
         public enum MouseEventFlags : uint

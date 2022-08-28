@@ -1,9 +1,9 @@
 ﻿using Accelerators.Handlers.Telegram;
 using SMMTool.Utils.WindowsApi;
 
-namespace Accelerators.Processors
+namespace Accelerators.Processors.Implementation
 {
-    public class TelegramProcessor
+    public class TelegramProcessor : IProcessor
     {
         private readonly WinApiWrapper _winApi;
 

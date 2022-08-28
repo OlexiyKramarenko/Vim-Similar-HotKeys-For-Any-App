@@ -26,8 +26,7 @@ namespace Accelerators.FileExplorer.Modes.Normal
            .SendKey(VirtualKey.F_key)
            .SendKeyUp(VirtualKey.VK_CONTROL);
 
-            ModeContext.Instance
-                       .UpdateState(new VisualState());
+            ModeContext.Instance.UpdateState(new VisualState());
         }
 
     }

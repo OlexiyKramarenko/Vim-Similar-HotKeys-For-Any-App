@@ -1,10 +1,9 @@
 ﻿using Accelerators.Handlers.Skype;
 using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
 
-namespace Accelerators.Processors
+namespace Accelerators.Processors.Implementation
 {
-    public class SkypeProcessor : Processor
+    public class SkypeProcessor : IProcessor
     {
 
         private readonly WinApiWrapper _winApi;

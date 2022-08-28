@@ -22,8 +22,7 @@ namespace Accelerators.FileExplorer.Modes.Insert
         {
             winApi.SendKey(VirtualKey.VK_ESCAPE);
 
-            ModeContext.Instance
-                       .UpdateState(new NormalState());
+            ModeContext.Instance.UpdateState(new NormalState());
         }
     }
 }

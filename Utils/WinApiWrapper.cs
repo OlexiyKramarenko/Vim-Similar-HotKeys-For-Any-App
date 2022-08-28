@@ -4,6 +4,53 @@ namespace SMMTool.Utils.WindowsApi
 {
     public class WinApiWrapper
     {
+        #region TODO:
+
+        public WinApiWrapper LeftMouseClickOnTheCenterOfWindow(IntPtr hwnd) =>
+            LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd,
+                new POINT(
+                    GetWindowWidth(hwnd) / 2,
+                    GetWindowHeight(hwnd) / 2));
+
+        public WinApiWrapper LeftMouseClickRelatedToTopLeftCornerOfWindow(IntPtr hwnd, POINT p) =>
+            LeftMouseClickRelatedToTopLeftCornerOfScreen(
+                new POINT(
+                    GetWindowLeftX(hwnd) + p.X,
+                    GetWindowTopY(hwnd) + p.Y));
+
+        public WinApiWrapper LeftMouseClickRelatedToTopLeftCornerOfScreen(POINT p) =>
+            LeftMouseClick(p.X, p.Y); 
+
+        public WinApiWrapper LeftMouseClickRelatedToBottomRightCornerOfWindow(IntPtr hwnd, POINT p) =>
+            LeftMouseClickRelatedToTopLeftCornerOfScreen(
+                new POINT(
+                    GetWindowRightX(hwnd) + p.X,
+                    GetWindowBottomY(hwnd) + p.Y));
+
+        public WinApiWrapper LeftMouseClickRelatedToBottomLeftCornerOfWindow(IntPtr hwnd, POINT p) =>
+            LeftMouseClickRelatedToTopLeftCornerOfScreen(
+                new POINT(
+                    GetWindowLeftX(hwnd) + p.X,
+                    GetWindowBottomY(hwnd) + p.Y));
+
+        public WinApiWrapper LeftMouseClickRelatedToTopRightCornerOfWindow(IntPtr hwnd, POINT p) =>
+            LeftMouseClickRelatedToTopLeftCornerOfScreen(
+                new POINT(
+                    GetWindowRightX(hwnd) + p.X,
+                    GetWindowTopY(hwnd) + p.Y));
+
+        public WinApiWrapper RightMouseClickRelatedToTopRightCornerOfWindow(IntPtr hwnd, POINT p) =>
+            RightMouseClickRelatedToTopLeftCornerOfScreen(
+                new POINT(
+                    GetWindowRightX(hwnd) + p.X,
+                    GetWindowTopY(hwnd) + p.Y));
+
+        public WinApiWrapper RightMouseClickRelatedToTopLeftCornerOfWindow(IntPtr hwnd, POINT p) =>
+            RightMouseClickRelatedToTopLeftCornerOfScreen(
+                new POINT(
+                    GetWindowLeftX(hwnd) + p.X,
+                    GetWindowTopY(hwnd) + p.Y));
+
         public POINT GetCursorWindowPositionFromTopLeftCornerOfWindow(IntPtr hwnd)
         {
             var pos = GetCursorScreenPosition();
@@ -14,18 +61,6 @@ namespace SMMTool.Utils.WindowsApi
             var res = new POINT(pos.X - dx, pos.Y - dy);
 
             return res;
-        }
-
-        public POINT GetCursorScreenPosition()
-        {
-            POINT lpPoint;
-            bool success = WinApi.GetCursorPos(out lpPoint);
-            if (!success)
-            {
-                throw new InvalidOperationException("Cannot find cursor position.");
-            }
-
-            return lpPoint;
         }
 
         public WinApiWrapper MouseMoveToBottomLeftCornerOfWindow(IntPtr hwnd, POINT point)
@@ -60,29 +95,7 @@ namespace SMMTool.Utils.WindowsApi
             return this;
         }
 
-        public int XScreenToWindow(int screenX)
-        {
-            int sx = GetSystemMetrics(SM_CXSCREEN);
-            int windowX = screenX * 65536 / sx;
-            return windowX;
-        }
-
-        public int YScreenToWindow(int screenY)
-        {
-            int sy = GetSystemMetrics(SM_CYSCREEN);
-            int windowY = screenY * 65536 / sy;
-            return windowY;
-        }
-
-        private WinApiWrapper MouseMove(int x, int y)
-        {
-            int sx = GetSystemMetrics(SM_CXSCREEN);
-            int sy = GetSystemMetrics(SM_CYSCREEN);
-            int dx = x * 65536 / sx;
-            int dy = y * 65536 / sy;
-            mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, dx, dy, dwData: 0, UIntPtr.Zero);
-            return this;
-        }
+        #endregion
 
         public WinApiWrapper MouseWheel(int distance)
         {
@@ -147,69 +160,13 @@ namespace SMMTool.Utils.WindowsApi
             return this;
         }
 
-        public WinApiWrapper LeftMouseClickOnTheCenterOfWindow(IntPtr hwnd) =>
-            LeftMouseClickRelatedToTopLeftCornerOfWindow(hwnd,
-                new POINT(
-                    GetWindowWidth(hwnd) / 2,
-                    GetWindowHeight(hwnd) / 2));
-
-        public WinApiWrapper LeftMouseClickRelatedToTopLeftCornerOfWindow(IntPtr hwnd, POINT p) =>
-            LeftMouseClickRelatedToTopLeftCornerOfScreen(
-                new POINT(
-                    GetWindowLeftX(hwnd) + p.X,
-                    GetWindowTopY(hwnd) + p.Y));
-
-        public WinApiWrapper LeftMouseClickRelatedToTopLeftCornerOfScreen(POINT p) =>
-            LeftMouseClick(p.X, p.Y);
-
-        public WinApiWrapper LeftMouseClick(int x, int y) =>
-            MouseClick(x, y, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
-
-        public WinApiWrapper LeftMouseClickRelatedToBottomRightCornerOfWindow(IntPtr hwnd, POINT p) =>
-            LeftMouseClickRelatedToTopLeftCornerOfScreen(
-                new POINT(
-                    GetWindowRightX(hwnd) + p.X,
-                    GetWindowBottomY(hwnd) + p.Y));
-
-        public WinApiWrapper LeftMouseClickRelatedToBottomLeftCornerOfWindow(IntPtr hwnd, POINT p) =>
-            LeftMouseClickRelatedToTopLeftCornerOfScreen(
-                new POINT(
-                    GetWindowLeftX(hwnd) + p.X,
-                    GetWindowBottomY(hwnd) + p.Y));
-
-        public WinApiWrapper LeftMouseClickRelatedToTopRightCornerOfWindow(IntPtr hwnd, POINT p) =>
-            LeftMouseClickRelatedToTopLeftCornerOfScreen(
-                new POINT(
-                    GetWindowRightX(hwnd) + p.X,
-                    GetWindowTopY(hwnd) + p.Y));
-
-        public WinApiWrapper RightMouseClickRelatedToTopRightCornerOfWindow(IntPtr hwnd, POINT p) =>
-            RightMouseClickRelatedToTopLeftCornerOfScreen(
-                new POINT(
-                    GetWindowRightX(hwnd) + p.X,
-                    GetWindowTopY(hwnd) + p.Y));
-
-        public WinApiWrapper RightMouseClickRelatedToTopLeftCornerOfWindow(IntPtr hwnd, POINT p) =>
-            RightMouseClickRelatedToTopLeftCornerOfScreen(
-                new POINT(
-                    GetWindowLeftX(hwnd) + p.X,
-                    GetWindowTopY(hwnd) + p.Y));
-
-        //public WinApiWrapper RightMouseClickRelatedToTopRightCornerOfScreen(POINT p) =>
-        //   RightMouseClick(p.X, p.Y);
-
-        private WinApiWrapper RightMouseClickRelatedToTopLeftCornerOfScreen(POINT p) =>
-            RightMouseClick(p.X, p.Y);
-
-        private WinApiWrapper RightMouseClick(int x, int y) =>
-            MouseClick(x, y, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
 
         public int GetWindowBottomY(IntPtr hwnd) => GetWindowRect(hwnd).Bottom;
-        private int GetWindowTopY(IntPtr hwnd) => GetWindowRect(hwnd).Top;
+        public int GetWindowTopY(IntPtr hwnd) => GetWindowRect(hwnd).Top;
         public int GetWindowLeftX(IntPtr hwnd) => GetWindowRect(hwnd).Left;
-        private int GetWindowRightX(IntPtr hwnd) => GetWindowRect(hwnd).Right;
+        public int GetWindowRightX(IntPtr hwnd) => GetWindowRect(hwnd).Right;
 
-        private int GetWindowWidth(IntPtr hwnd) => GetWindowRightX(hwnd) - GetWindowLeftX(hwnd);
+        public int GetWindowWidth(IntPtr hwnd) => GetWindowRightX(hwnd) - GetWindowLeftX(hwnd);
         public int GetWindowHeight(IntPtr hwnd) => GetWindowBottomY(hwnd) - GetWindowTopY(hwnd);
 
         public WinApiWrapper SetWindowPos(IntPtr hwnd, POINT topLeftAppWindowCorner, int width, int height)
@@ -232,6 +189,51 @@ namespace SMMTool.Utils.WindowsApi
 
         #region Private Methods
 
+        private POINT GetCursorScreenPosition()
+        {
+            POINT lpPoint;
+            bool success = WinApi.GetCursorPos(out lpPoint);
+            if (!success)
+            {
+                throw new InvalidOperationException("Cannot find cursor position.");
+            }
+
+            return lpPoint;
+        }
+
+        private WinApiWrapper LeftMouseClick(int x, int y) =>
+            MouseClick(x, y, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
+
+        private WinApiWrapper RightMouseClickRelatedToTopLeftCornerOfScreen(POINT p) =>
+            RightMouseClick(p.X, p.Y);
+
+        private WinApiWrapper RightMouseClick(int x, int y) =>
+            MouseClick(x, y, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
+
+        private int XScreenToWindow(int screenX)
+        {
+            int sx = GetSystemMetrics(SM_CXSCREEN);
+            int windowX = screenX * 65536 / sx;
+            return windowX;
+        }
+
+        private int YScreenToWindow(int screenY)
+        {
+            int sy = GetSystemMetrics(SM_CYSCREEN);
+            int windowY = screenY * 65536 / sy;
+            return windowY;
+        }
+
+        private WinApiWrapper MouseMove(int x, int y)
+        {
+            int sx = GetSystemMetrics(SM_CXSCREEN);
+            int sy = GetSystemMetrics(SM_CYSCREEN);
+            int dx = x * 65536 / sx;
+            int dy = y * 65536 / sy;
+            mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, dx, dy, dwData: 0, UIntPtr.Zero);
+            return this;
+        }
+
         private WinApiWrapper MouseClick(int x, int y, uint down, uint up)
         {
             int sx = GetSystemMetrics(SM_CXSCREEN);
@@ -251,6 +253,7 @@ namespace SMMTool.Utils.WindowsApi
             return rect;
         }
 
-        #endregion 
+        #endregion
+
     }
 }

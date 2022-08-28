@@ -1,9 +1,9 @@
 ﻿using Accelerators.Handlers.AdobePdfReader;
 using SMMTool.Utils.WindowsApi;
 
-namespace Accelerators.Processors
+namespace Accelerators.Processors.Implementation
 {
-    internal class AdobePdfProcessor : Processor
+    internal class AdobePdfProcessor : IProcessor
     {
 
         private readonly WinApiWrapper _winApi;

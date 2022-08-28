@@ -1,9 +1,9 @@
 ﻿using Accelerators.Handlers.Viber;
 using SMMTool.Utils.WindowsApi;
 
-namespace Accelerators.Processors
+namespace Accelerators.Processors.Implementation
 {
-    public class ViberProcessor : Processor
+    public class ViberProcessor : IProcessor
     {
 
         private readonly WinApiWrapper _winApi;
