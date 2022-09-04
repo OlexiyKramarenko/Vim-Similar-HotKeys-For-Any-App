@@ -1,32 +1,34 @@
 ﻿using Accelerators.Processors;
 using Accelerators.Processors.Implementation;
-using SMMTool.Utils.WindowsApi;
+using Utils.Window;
 
 namespace Accelerators
 {
     public class Program
     {
+        private static readonly Dictionary<ProcessorBase, Func<IntPtr>> _processorsDictionary;
 
-        private static Dictionary<ProcessorBase, Func<IntPtr>> ProcessorsDictionary
-        { get; } = new Dictionary<ProcessorBase, Func<IntPtr>>
-        {
-            { new FileExplorerProcessor(new WindowActions()), () => WinApi.FindWindowA("CabinetWClass", null) },
-            { new ViberProcessor(), () => WinApi.FindWindowA("Qt624QWindowOwnDCIcon", null) },
-            { new TelegramProcessor(), () => WinApi.FindWindowA("Qt5154QWindowIcon", null) },
-            { new AdobePdfProcessor(), () => WinApi.FindWindowA("AcrobatSDIWindow", null) },
-            { new LibreOfficeProcessor(), () => WinApi.FindWindowA("SALFRAME", null) },
-            { new ChromeProcessor(), () => WinApi.GetHwndOfForegroundProcessByName("chrome") },
-            { new SkypeProcessor(), () => WinApi.GetHwndOfForegroundProcessByName("skype") }
-        };
-
+        static Program()
+        { 
+            _processorsDictionary = new Dictionary<ProcessorBase, Func<IntPtr>>
+            {
+                { new FileExplorerProcessor(), () => WindowActions.GetWindowHandle("CabinetWClass") },
+                { new ViberProcessor(), () => WindowActions.GetWindowHandle("Qt624QWindowOwnDCIcon") },
+                { new TelegramProcessor(), () => WindowActions.GetWindowHandle("Qt5154QWindowIcon") },
+                { new AdobePdfProcessor(), () => WindowActions.GetWindowHandle("AcrobatSDIWindow") },
+                { new LibreOfficeProcessor(), () => WindowActions.GetWindowHandle("SALFRAME") },
+                { new ChromeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("chrome") },
+                { new SkypeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("skype") }
+            };
+        }
 
         public static void Main(string[] args)
         {
             while (true)
             {
-                var foregroundHwnd = WinApi.GetForegroundWindow();
-
-                WindowProcessorHelper.Process(ProcessorsDictionary, foregroundHwnd);
+                WindowProcessorHelper.Process(
+                                        _processorsDictionary,
+                                        WindowActions.ForegroundWindowHandle);
             }
         }
 

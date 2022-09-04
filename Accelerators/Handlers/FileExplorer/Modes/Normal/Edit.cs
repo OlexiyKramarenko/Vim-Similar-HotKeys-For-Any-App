@@ -1,8 +1,9 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.FileExplorer.Modes;
 using Accelerators.Modes;
-using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+using Accelerators.Modes.Implementation;
+using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.FileExplorer.Modes.Normal
 {
@@ -28,9 +29,9 @@ namespace Accelerators.FileExplorer.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window)
+        protected override void SendKeys(WindowGeometry window)
         {
-            actions.Press(VirtualKey.VK_F2);
+            Actions.Press(VirtualKey.VK_F2);
 
             _modeContext.UpdateState(new InsertState());
         }

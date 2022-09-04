@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.Viber.Modes.Normal
 {
@@ -17,13 +17,13 @@ namespace Accelerators.Handlers.Viber.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window)
+        protected override void SendKeys(WindowGeometry window)
         {
-            actions.MovePointer(window.FromTopLeft(310, 300));
+            Actions.MovePointer(window.FromLeftTop(310, 300));
 
             for (int i = 0; i < 30; i++)
             {
-                actions
+                Actions
                   .MouseWheel(500)
                   .Wait(200);
             }

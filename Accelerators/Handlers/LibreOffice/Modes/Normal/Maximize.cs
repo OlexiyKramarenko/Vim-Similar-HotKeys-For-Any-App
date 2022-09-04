@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.LibreOffice.Modes.Normal
 {
@@ -16,8 +16,8 @@ namespace Accelerators.Handlers.LibreOffice.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window) => actions
-            .LeftClick(window.FromTopRight(-76, 17));
+        protected override void SendKeys(WindowGeometry window) => Actions
+            .LeftClick(window.FromRightTop(-76, 17));
 
     }
 }

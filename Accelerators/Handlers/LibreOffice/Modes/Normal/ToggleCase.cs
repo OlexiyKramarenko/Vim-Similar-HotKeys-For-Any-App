@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.LibreOffice.Modes.Normal
 {
@@ -16,7 +16,7 @@ namespace Accelerators.Handlers.LibreOffice.Modes.Normal
         };
 
         // ~   Tools -> Customize -> Format -> Toggle case
-        protected override void SendKeys(Window window) => actions
+        protected override void SendKeys(WindowGeometry window) => Actions
             .Wait(100)
             .Press(VirtualKey.VK_SHIFT, VirtualKey.VK_F10)
             .Wait(100);

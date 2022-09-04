@@ -1,4 +1,4 @@
-﻿using Accelerators.Handlers.FileExplorer.Modes;
+﻿using Accelerators.Modes.Implementation;
 
 namespace Accelerators.Modes
 {

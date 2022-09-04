@@ -1,6 +1,6 @@
 ﻿using Accelerators.Handlers;
-using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.FileExplorer.Modes.Normal
 {
@@ -17,7 +17,7 @@ namespace Accelerators.FileExplorer.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window) => actions
+        protected override void SendKeys(WindowGeometry window) => Actions
             .Press(VirtualKey.VK_CONTROL, VirtualKey.Z_key);
 
     }

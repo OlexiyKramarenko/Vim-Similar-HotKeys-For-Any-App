@@ -1,13 +1,12 @@
-﻿using Accelerators.Processors;
-using Accelerators.Processors.Implementation;
-using SMMTool.Utils.WindowsApi;
+﻿using Accelerators.Processors.Implementation;
+using Utils.Window;
 
-namespace Accelerators
+namespace Accelerators.Processors
 {
     public static class WindowProcessorHelper
     {
 
-        private static Dictionary<IntPtr, Window> WindowObjPool = new Dictionary<IntPtr, Window>();
+        private static Dictionary<IntPtr, WindowGeometry> WindowObjPool = new Dictionary<IntPtr, WindowGeometry>();
 
         public static void Process(
             Dictionary<ProcessorBase, Func<IntPtr>> processorsDictionary,
@@ -33,7 +32,7 @@ namespace Accelerators
 
             if (poolIsEmptyOrDoesntHaveTheKey)
             {
-                WindowObjPool.Add(hwnd, Window.Create(hwnd));
+                WindowObjPool.Add(hwnd, WindowGeometry.Create(hwnd));
             }
         }
 

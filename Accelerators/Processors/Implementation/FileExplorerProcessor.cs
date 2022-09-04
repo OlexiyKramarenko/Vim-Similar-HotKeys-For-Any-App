@@ -1,6 +1,6 @@
 ﻿using Accelerators.Handlers;
-using Accelerators.Modes;
-using SMMTool.Utils.WindowsApi;
+using Accelerators.Modes.Implementation;
+using Utils.Window;
 using Find = Accelerators.FileExplorer.Modes.Find;
 using Insert = Accelerators.FileExplorer.Modes.Insert;
 using Normal = Accelerators.FileExplorer.Modes.Normal;
@@ -12,7 +12,7 @@ namespace Accelerators.Processors.Implementation
     {
         protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        public FileExplorerProcessor(WindowActions actions): base(actions, new ModeContext())
+        public FileExplorerProcessor()
         { 
             StateHandlerDictionary = new Dictionary<Type, HandlerBase>
             {
@@ -52,7 +52,7 @@ namespace Accelerators.Processors.Implementation
             };
         }
 
-        public override void Process(Window window)
+        public override void Process(WindowGeometry window)
         {
             ShowTooltip(window);
             base.Process(window);

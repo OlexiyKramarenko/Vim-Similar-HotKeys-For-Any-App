@@ -1,6 +1,7 @@
-﻿using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.WinApi;
+using Utils.Window;
 
-namespace SMMTool.Utils.WindowsApi
+namespace Utils.Handlers
 {
     public class DoubleKeyPressHandler
     {
@@ -9,18 +10,18 @@ namespace SMMTool.Utils.WindowsApi
 
         private VirtualKey _prevKey;
 
-        public void Handle(Action<Window> sendKeys, Window wnd, VirtualKey key)
+        public void Handle(Action<WindowGeometry> sendKeys, WindowGeometry wnd, VirtualKey key)
         {
             int intervalBetweenTwoPresses =
                 (DateTime.Now - _prevDataTime).Milliseconds;
 
-            if (intervalBetweenTwoPresses >= 100 &&
+            if (intervalBetweenTwoPresses > 100 &&
                 intervalBetweenTwoPresses < 250 &&
                 _prevKey == key)
             {
                 sendKeys(wnd);
                 _prevDataTime = DateTime.MinValue;
-                _prevKey = VirtualKey.VK_ZOOM;
+                _prevKey = VirtualKey.Undefined_key;
             }
             else
             {

@@ -1,8 +1,7 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.AdobePdfReader.Modes.Insert;
 using Accelerators.Handlers.AdobePdfReader.Modes.Normal;
-using Accelerators.Modes;
-using SMMTool.Utils.WindowsApi;
+using Accelerators.Modes.Implementation;
 
 namespace Accelerators.Processors.Implementation
 {
@@ -10,7 +9,7 @@ namespace Accelerators.Processors.Implementation
     {
         protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        public AdobePdfProcessor() : base(new WindowActions(), new ModeContext())
+        public AdobePdfProcessor()
         {
             StateHandlerDictionary = new Dictionary<Type, HandlerBase>
             {

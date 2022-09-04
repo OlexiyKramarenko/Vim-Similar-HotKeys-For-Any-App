@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.Viber.Modes.Normal
 {
@@ -17,9 +17,9 @@ namespace Accelerators.Handlers.Viber.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window)
+        protected override void SendKeys(WindowGeometry window)
         {
-            var yPos = window.FromTopLeft().Y;
+            var yPos = window.FromTopLeft.Y;
 
             var bottomOftheTopPanel = 160;
 
@@ -27,27 +27,27 @@ namespace Accelerators.Handlers.Viber.Modes.Normal
 
             if (yPos <= bottomOftheTopPanel + 86)
             {
-                actions
+                Actions
                     .Wait(50)
                     .MouseWheel(75)
                     .Wait(50)
                     .MouseWheel(75)
                     .Wait(50)
-                    .LeftClick(window.FromTopLeft(x, 200));
+                    .LeftClick(window.FromLeftTop(x, 200));
             }
             else if (yPos < window.Height - 90)
             {
-                actions
+                Actions
                     .Wait(100)
-                    .LeftClick(window.FromTopLeft(x, yPos - 65)); // Click on the next chat
+                    .LeftClick(window.FromLeftTop(x, yPos - 65)); // Click on the next chat
             }
             else
             {
                 // Click on the last chat
-                actions
-                  .LeftClick(window.FromBottomLeft(x, -100))
+                Actions
+                  .LeftClick(window.FromLeftBottom(x, -100))
                   .MouseWheel(90)
-                  .MovePointer(window.FromBottomLeft(x, -100));
+                  .MovePointer(window.FromLeftBottom(x, -100));
             }
         }
 

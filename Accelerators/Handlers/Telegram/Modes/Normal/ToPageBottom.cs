@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.Telegram.Modes.Normal
 {
@@ -18,8 +18,8 @@ namespace Accelerators.Handlers.Telegram.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window) => actions
-            .LeftClick(window.FromBottomRight(-40, -100));
+        protected override void SendKeys(WindowGeometry window) => Actions
+            .LeftClick(window.FromRightBottom(-40, -100));
 
     }
 }

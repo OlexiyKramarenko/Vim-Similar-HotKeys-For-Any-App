@@ -1,7 +1,6 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.Telegram.Modes.Normal;
-using Accelerators.Modes;
-using SMMTool.Utils.WindowsApi;
+using Accelerators.Modes.Implementation;
 
 namespace Accelerators.Processors.Implementation
 {
@@ -9,7 +8,7 @@ namespace Accelerators.Processors.Implementation
     {
         protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        public TelegramProcessor() : base(new WindowActions(), new ModeContext())
+        public TelegramProcessor()
         {
             StateHandlerDictionary = new Dictionary<Type, HandlerBase>
             {

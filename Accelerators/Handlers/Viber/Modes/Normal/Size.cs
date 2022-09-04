@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.Viber.Modes.Normal
 {
@@ -17,9 +17,9 @@ namespace Accelerators.Handlers.Viber.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window) => actions
+        protected override void SendKeys(WindowGeometry window) => Actions
             .Press(VirtualKey.VK_BACK)
-            .RightClick(window.FromTopRight(-300, 20))
+            .RightClick(window.FromRightTop(-300, 20))
             .Press(VirtualKey.VK_DOWN, times: 3)
             .Press(VirtualKey.VK_RETURN);
 

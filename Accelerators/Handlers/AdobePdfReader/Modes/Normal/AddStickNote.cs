@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.WinApi;
+using Utils.Window;
 
 namespace Accelerators.Handlers.AdobePdfReader.Modes.Normal
 {
@@ -16,7 +16,7 @@ namespace Accelerators.Handlers.AdobePdfReader.Modes.Normal
             VirtualKey.VK_OEM_6 // "]"
         };
 
-        protected override void SendKeys(Window window) => actions
+        protected override void SendKeys(WindowGeometry window) => Actions
              .Press(VirtualKey.VK_CONTROL,
                     VirtualKey.VK_LEFT)
              .Wait(100)

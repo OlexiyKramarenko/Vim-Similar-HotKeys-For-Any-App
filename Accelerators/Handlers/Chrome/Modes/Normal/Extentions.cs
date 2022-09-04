@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.Chrome.Modes.Normal
 {
@@ -18,7 +18,7 @@ namespace Accelerators.Handlers.Chrome.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window) => actions
+        protected override void SendKeys(WindowGeometry window) => Actions
             .Wait(200)
             .Press(VirtualKey.VK_ESCAPE)
             .Wait(100)

@@ -1,4 +1,4 @@
-﻿namespace Accelerators.Modes
+﻿namespace Accelerators.Modes.Implementation
 {
     public class FindState : IState
     {

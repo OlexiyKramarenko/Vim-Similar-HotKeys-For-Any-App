@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 
-namespace SMMTool.Utils.WindowsApi
+namespace Utils.WinApi
 {
     public class ToolTip : IDisposable
     {
@@ -196,8 +196,8 @@ namespace SMMTool.Utils.WindowsApi
         /// <summary>returns (LPARAM) MAKELONG( pt.X, pt.Y )</summary>
         internal static IntPtr makeLParam(Point pt)
         {
-            int res = (pt.X & 0xFFFF);
-            res |= ((pt.Y & 0xFFFF) << 16);
+            int res = pt.X & 0xFFFF;
+            res |= (pt.Y & 0xFFFF) << 16;
             return new IntPtr(res);
         }
 
@@ -355,7 +355,7 @@ namespace SMMTool.Utils.WindowsApi
 
         /// <summary>Show the balloon.</summary>
         /// <param name="pt">The balloon stem position, in the owner's client coordinates.</param>
-        public void Show(Point pt)
+        public void ShowTooltip(Point pt)
         {
             //VerifyControlIsAlive();
 

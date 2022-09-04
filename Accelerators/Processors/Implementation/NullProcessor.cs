@@ -1,6 +1,4 @@
 ﻿using Accelerators.Handlers;
-using Accelerators.Modes;
-using SMMTool.Utils.WindowsApi;
 
 namespace Accelerators.Processors.Implementation
 {
@@ -8,7 +6,7 @@ namespace Accelerators.Processors.Implementation
     {
         private static NullProcessor _nullProcessor;
 
-        private NullProcessor() : base(new WindowActions(), new ModeContext()) { }
+        private NullProcessor() { }
 
         public static NullProcessor Instance
         {

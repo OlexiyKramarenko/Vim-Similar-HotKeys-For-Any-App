@@ -1,9 +1,9 @@
-﻿using SMMTool.Utils.WindowsApi;
+﻿using Utils.Window;
 
 namespace Accelerators.Handlers
 {
     public interface IHandler
     {
-        public void Handle(Window window);
+        public void Handle(WindowGeometry window);
     }
 }

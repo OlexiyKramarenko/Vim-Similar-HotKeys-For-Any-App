@@ -1,7 +1,7 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.LibreOffice.Modes.Normal;
-using Accelerators.Modes;
-using SMMTool.Utils.WindowsApi;
+using Accelerators.Modes.Implementation;
+using Utils.Window;
 
 namespace Accelerators.Processors.Implementation
 {
@@ -9,7 +9,7 @@ namespace Accelerators.Processors.Implementation
     {
         protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        public LibreOfficeProcessor() : base(new WindowActions(), new ModeContext())
+        public LibreOfficeProcessor()
         {
             StateHandlerDictionary = new Dictionary<Type, HandlerBase>
             {

@@ -1,25 +1,24 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Modes;
-using SMMTool.Utils.WindowsApi;
 using System.Drawing;
+using Utils.WinApi;
+using Utils.Window;
 
 namespace Accelerators.Processors
 {
     public abstract class ProcessorBase
     {
-        private readonly WindowActions _actions;
         protected ModeContext ModeContext { get; }
 
-        public ProcessorBase(WindowActions actions, ModeContext modeContext)
+        public ProcessorBase()
         {
-            _actions = actions;
-            ModeContext = modeContext;
+            ModeContext = new ModeContext();
         }
 
 
         protected abstract Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        public virtual void Process(Window window)
+        public virtual void Process(WindowGeometry window)
         {
             var state = ModeContext.State.GetType();
 
@@ -29,17 +28,17 @@ namespace Accelerators.Processors
             }
         }
 
-        protected void ShowTooltip(Window window)
+        protected void ShowTooltip(WindowGeometry window)
         {
             ToolTip
               .Instance(window.Hwnd, ModeContext.ModeName)
-              .Show(TooltipLocation(window.Hwnd));
+              .ShowTooltip(TooltipLocation(window));
         }
 
-        private Point TooltipLocation(IntPtr hwnd)
+        private Point TooltipLocation(WindowGeometry geometry)
         {
-            var x = _actions.GetWindowLeftX(hwnd);
-            var y = _actions.GetWindowBottomY(hwnd);
+            var x = geometry.LeftX;
+            var y = geometry.BottomY;
             return new Point(x + 5, y - 6);
         }
 

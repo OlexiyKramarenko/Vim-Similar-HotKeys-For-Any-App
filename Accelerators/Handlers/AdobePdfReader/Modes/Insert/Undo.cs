@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.WinApi;
+using Utils.Window;
 
 namespace Accelerators.Handlers.AdobePdfReader.Modes.Insert
 {
@@ -17,11 +17,9 @@ namespace Accelerators.Handlers.AdobePdfReader.Modes.Insert
         };
 
 
-        protected override void SendKeys(Window window) => actions
+        protected override void SendKeys(WindowGeometry window) => Actions
             .Press(VirtualKey.VK_CONTROL, VirtualKey.Z_key)
-            .LeftClick(window.InCenter());
+            .LeftClick(window.InCenter);
 
     }
-}
-
-
+} 

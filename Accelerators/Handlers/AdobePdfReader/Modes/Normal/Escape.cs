@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.AdobePdfReader.Modes.Normal
 {
@@ -17,7 +17,7 @@ namespace Accelerators.Handlers.AdobePdfReader.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window) => actions
+        protected override void SendKeys(WindowGeometry window) => Actions
             .Wait(300)
             .Press(VirtualKey.VK_BACK)
             .Press(VirtualKey.VK_BACK)

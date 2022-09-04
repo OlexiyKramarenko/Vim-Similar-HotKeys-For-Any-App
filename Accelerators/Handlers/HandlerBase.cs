@@ -1,29 +1,30 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Handlers;
+using Utils.WinApi;
+using Utils.Window;
 
 namespace Accelerators.Handlers
 {
     public abstract class HandlerBase : IHandler
     {
-        protected readonly WindowActions actions;
         private readonly DoubleKeyPressHandler _twiceKeyPressHandler;
         private readonly IHandler _nextHandler;
-        protected abstract void SendKeys(Window window);
+
+        protected WindowActions Actions { get; }
         protected abstract VirtualKey[] AcceleratorKeys { get; }
+        protected abstract void SendKeys(WindowGeometry window);
 
         public HandlerBase(IHandler nextHandler)
         {
             _nextHandler = nextHandler;
-            actions = new WindowActions();
+            Actions = new WindowActions();
             _twiceKeyPressHandler = new DoubleKeyPressHandler();
         }
 
-        public HandlerBase() : this(NullHandler.Instance) { }
+        public HandlerBase() : this(NullHandler.Instance) { } 
 
-
-        public void Handle(Window window)
+        public void Handle(WindowGeometry window)
         {
-            if (RequestShouldBeProcessed(actions))
+            if (RequestShouldBeProcessed(Actions))
             {
                 if (KeyWasPressedTwice())
                 {

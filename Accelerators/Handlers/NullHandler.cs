@@ -1,4 +1,4 @@
-﻿using SMMTool.Utils.WindowsApi;
+﻿using Utils.Window;
 
 namespace Accelerators.Handlers
 {
@@ -23,7 +23,7 @@ namespace Accelerators.Handlers
         {
         }
 
-        public void Handle(Window window)
+        public void Handle(WindowGeometry window)
         {
         }
 

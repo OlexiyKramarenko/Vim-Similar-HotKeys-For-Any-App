@@ -1,5 +1,5 @@
-﻿using SMMTool.Utils.WindowsApi;
-using static SMMTool.Utils.WindowsApi.WinApi;
+﻿using Utils.Window;
+using Utils.WinApi;
 
 namespace Accelerators.Handlers.Skype.Modes.Normal
 {
@@ -17,8 +17,8 @@ namespace Accelerators.Handlers.Skype.Modes.Normal
         };
 
 
-        protected override void SendKeys(Window window) => actions
-            .MovePointer(window.FromBottomRight(-13, -300))
+        protected override void SendKeys(WindowGeometry window) => Actions
+            .MovePointer(window.FromRightBottom(-13, -300))
             .Wait(100)
             .MouseWheel(500);
 
