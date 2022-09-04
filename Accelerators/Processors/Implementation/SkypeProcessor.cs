@@ -1,35 +1,31 @@
-﻿using Accelerators.Handlers.Skype;
+﻿using Accelerators.Handlers;
+using Accelerators.Handlers.Skype.Modes.Normal;
+using Accelerators.Modes;
 using SMMTool.Utils.WindowsApi;
 
 namespace Accelerators.Processors.Implementation
 {
-    public class SkypeProcessor : IProcessor
+    public class SkypeProcessor : ProcessorBase
     {
+        protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        private readonly WinApiWrapper _winApi;
-
-        public SkypeProcessor(WinApiWrapper winApi)
+        public SkypeProcessor() : base(new WindowActions(), new ModeContext())
         {
-            _winApi = winApi;
+            StateHandlerDictionary = new Dictionary<Type, HandlerBase>
+            {
+                { typeof(NormalState),
+                              new ChatAbove(
+                               new ChatBelow(
+                                new EditTheLastPage(
+                                 new Exit(
+                                  new GoToTheBottom(
+                                   new Minimize(
+                                    new Move(
+                                     new Size(
+                                      new WheelDown(
+                                       new WheelUp(
+                                        new Maximize())))))))))) }
+            };
         }
-
-        public void Process(IntPtr hwnd)
-        {
-            var chain =
-              new ChatAbove(
-               new ChatBelow(
-                new EditTheLastPage(
-                 new Exit(
-                  new GoToTheBottom(
-                   new Minimize(
-                    new Move(
-                     new Size(
-                      new WheelDown(
-                       new WheelUp(
-                        new Maximize()))))))))));
-
-            chain.Handle(hwnd, _winApi);
-        }
-
     }
 }

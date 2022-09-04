@@ -61,7 +61,7 @@ namespace SMMTool.Utils.WindowsApi
                 return IntPtr.Zero;
             }
 
-            if (process.ProcessName == name)
+            if (process.ProcessName.ToLower() == name.ToLower())
             {
                 return process.MainWindowHandle;
             }

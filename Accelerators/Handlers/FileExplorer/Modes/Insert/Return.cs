@@ -17,8 +17,8 @@ namespace Accelerators.FileExplorer.Modes.Insert
         };
 
 
-        protected override void SendKeys(IntPtr hwnd, WinApiWrapper winApi) => winApi
-            .SendKey(VirtualKey.VK_RETURN);
+        protected override void SendKeys(Window window) => actions
+            .Press(VirtualKey.VK_RETURN);
     }
 }
 

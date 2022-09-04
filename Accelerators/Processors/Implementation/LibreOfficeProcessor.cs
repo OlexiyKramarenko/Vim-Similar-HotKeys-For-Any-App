@@ -1,31 +1,27 @@
-﻿using Accelerators.Handlers.LibreOffice;
+﻿using Accelerators.Handlers;
+using Accelerators.Handlers.LibreOffice.Modes.Normal;
+using Accelerators.Modes;
 using SMMTool.Utils.WindowsApi;
 
 namespace Accelerators.Processors.Implementation
 {
-    public class LibreOfficeProcessor : IProcessor
+    public class LibreOfficeProcessor : ProcessorBase
     {
+        protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        private readonly WinApiWrapper _winApi;
-
-        public LibreOfficeProcessor(WinApiWrapper winApi)
+        public LibreOfficeProcessor() : base(new WindowActions(), new ModeContext())
         {
-            _winApi = winApi;
+            StateHandlerDictionary = new Dictionary<Type, HandlerBase>
+            {
+                { typeof(NormalState),
+                               new Highlight(
+                                new Minimize(
+                                 new MoveWindow(
+                                  new RemoveSpaces(
+                                   new StartVimAddon(
+                                    new ToggleCase(
+                                     new Maximize())))))) }
+            };
         }
-
-        public void Process(IntPtr hwnd)
-        {
-            var chain =
-                new Highlight(
-                 new Minimize(
-                  new MoveWindow(
-                   new RemoveSpaces(
-                    new StartVimAddon(
-                     new ToggleCase(
-                      new Maximize()))))));
-
-            chain.Handle(hwnd, _winApi);
-        }
-
     }
 }

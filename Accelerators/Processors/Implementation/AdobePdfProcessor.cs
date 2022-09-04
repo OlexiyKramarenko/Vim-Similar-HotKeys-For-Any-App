@@ -1,42 +1,41 @@
-﻿using Accelerators.Handlers.AdobePdfReader;
+﻿using Accelerators.Handlers;
+using Accelerators.Handlers.AdobePdfReader.Modes.Insert;
+using Accelerators.Handlers.AdobePdfReader.Modes.Normal;
+using Accelerators.Modes;
 using SMMTool.Utils.WindowsApi;
 
 namespace Accelerators.Processors.Implementation
 {
-    internal class AdobePdfProcessor : IProcessor
+    public class AdobePdfProcessor : ProcessorBase
     {
+        protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        private readonly WinApiWrapper _winApi;
-
-        public AdobePdfProcessor(WinApiWrapper winApi)
+        public AdobePdfProcessor() : base(new WindowActions(), new ModeContext())
         {
-            _winApi = winApi;
+            StateHandlerDictionary = new Dictionary<Type, HandlerBase>
+            {
+                { typeof(InsertState), new Undo() },
+
+                { typeof(NormalState),
+                           new AddStickNote(
+                            new OpenTreeNode(
+                             new EndOfLine(
+                              new EndOfTheWord(
+                               new Escape(
+                                new Highlight(
+                                 new MoveDown(
+                                  new MoveLeft(
+                                   new MoveRight(
+                                     new MoveUp(
+                                      new CloseTreeNode(
+                                       new PageDown(
+                                        new PageUp(
+                                         new PrevWord(
+                                          new StartOfLine(
+                                           new StartOfTheWord(
+                                            new ToTheBottomOfPage(
+                                             new ToTheTopOfPage()))))))))))))))))) },
+            };
         }
-
-        public void Process(IntPtr hwnd)
-        {
-            var chain =
-               new AddStickNote(
-                new CloseTreeNode(
-                 new EndOfLine(
-                  new EndOfTheWord(
-                   new Escape(
-                    new Highlight(
-                     new MoveDown(
-                      new MoveLeft(
-                       new MoveRight(
-                        new MoveUp(
-                         new OpenTreeNode(
-                          new PageDown(
-                           new PageUp(
-                            new PrevWord(
-                             new StartOfLine(
-                              new StartOfTheWord(
-                               new ToTheBottomOfPage(
-                                new ToTheTopOfPage())))))))))))))))));
-
-            chain.Handle(hwnd, _winApi);
-        }
-
     }
 }

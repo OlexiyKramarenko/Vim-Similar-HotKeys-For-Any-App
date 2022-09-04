@@ -13,12 +13,16 @@ namespace Accelerators.FileExplorer.Modes.Normal
 
         protected override VirtualKey[] AcceleratorKeys => new[]
         {
+            VirtualKey.D_key,
             VirtualKey.D_key
         };
 
 
-        protected override void SendKeys(IntPtr hwnd, WinApiWrapper winApi) => winApi
-            .SendKey(VirtualKey.VK_DELETE);
+        protected override void SendKeys(Window window) => actions
+            .Wait(100)
+            .Press(VirtualKey.VK_DELETE)
+            .Wait(200)
+            .Press(VirtualKey.VK_F5);
     }
 }
 

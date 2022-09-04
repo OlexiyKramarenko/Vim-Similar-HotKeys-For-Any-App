@@ -1,38 +1,33 @@
-﻿using Accelerators.Handlers.Viber;
+﻿using Accelerators.Handlers;
+using Accelerators.Handlers.Viber.Modes.Normal;
+using Accelerators.Modes;
 using SMMTool.Utils.WindowsApi;
 
 namespace Accelerators.Processors.Implementation
 {
-    public class ViberProcessor : IProcessor
+    public class ViberProcessor : ProcessorBase
     {
+        protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        private readonly WinApiWrapper _winApi;
-
-        public ViberProcessor(WinApiWrapper winApi)
+        public ViberProcessor() : base(new WindowActions(), new ModeContext())
         {
-            _winApi = winApi;
+            StateHandlerDictionary = new Dictionary<Type, HandlerBase>
+            {
+                { typeof(NormalState),
+                                new Exit(
+                                 new ChatBelow(
+                                  new Maximize(
+                                   new Minimize(
+                                    new Move(
+                                     new NextChat(
+                                      new NextChat(
+                                       new WheelDown(
+                                        new WheelUp(
+                                         new ChatAbove(
+                                          new Size(
+                                           new ToPageBottom(
+                                            new ToPageTop())))))))))))) }
+            };
         }
-
-        public void Process(IntPtr hwnd)
-        {
-            var chain =
-             new Exit(
-              new FirstChat(
-               new Maximize(
-                new Minimize(
-                 new Move(
-                  new NextChat(
-                   new NextChat2(
-                    new PageDown(
-                     new PageUp(
-                      new PageUp2(
-                       new PrevChat(
-                        new Size(
-                         new ToTheBottomOfThePage(
-                          new ToTheTopOfThePage())))))))))))));
-
-            chain.Handle(hwnd, _winApi);
-        }
-
     }
 }

@@ -4,6 +4,6 @@ namespace Accelerators.Handlers
 {
     public interface IHandler
     {
-        public void Handle(IntPtr hwnd, WinApiWrapper winApi);
+        public void Handle(Window window);
     }
 }

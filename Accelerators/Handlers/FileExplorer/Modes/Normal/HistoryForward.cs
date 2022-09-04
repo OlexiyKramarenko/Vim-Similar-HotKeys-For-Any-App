@@ -18,10 +18,9 @@ namespace Accelerators.FileExplorer.Modes.Normal
         };
 
 
-        protected override void SendKeys(IntPtr hwnd, WinApiWrapper winApi) => winApi
-            .SendKeyDown(VirtualKey.VK_MENU)
-            .SendKey(VirtualKey.VK_LEFT)
-            .SendKeyUp(VirtualKey.VK_MENU);
+        protected override void SendKeys(Window window) => actions
+            .Wait(100)
+            .Press(VirtualKey.VK_MENU, VirtualKey.VK_LEFT);
     }
 }
 

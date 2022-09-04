@@ -1,16 +1,24 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.FileExplorer.Modes;
+using Accelerators.Modes;
 using SMMTool.Utils.WindowsApi;
 using static SMMTool.Utils.WindowsApi.WinApi;
 
 namespace Accelerators.FileExplorer.Modes.Insert
 {
     public class Escape : HandlerBase
-    {
+    { 
+        private readonly ModeContext _modeContext;
 
-        public Escape() { }
-        public Escape(IHandler next) : base(next) { }
+        public Escape(ModeContext modeContext)
+        {
+            _modeContext = modeContext;
+        }
 
+        public Escape(ModeContext modeContext, IHandler next) : base(next)
+        {
+            _modeContext = modeContext;
+        }
 
         protected override VirtualKey[] AcceleratorKeys => new[]
         {
@@ -18,11 +26,11 @@ namespace Accelerators.FileExplorer.Modes.Insert
         };
 
 
-        protected override void SendKeys(IntPtr hwnd, WinApiWrapper winApi)
+        protected override void SendKeys(Window window)
         {
-            winApi.SendKey(VirtualKey.VK_ESCAPE);
+            actions.Press(VirtualKey.VK_ESCAPE);
 
-            ModeContext.Instance.UpdateState(new NormalState());
+            _modeContext.UpdateState(new NormalState());
         }
     }
 }

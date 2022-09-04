@@ -1,35 +1,33 @@
-﻿using Accelerators.Handlers.Telegram;
+﻿using Accelerators.Handlers;
+using Accelerators.Handlers.Telegram.Modes.Normal;
+using Accelerators.Modes;
 using SMMTool.Utils.WindowsApi;
 
 namespace Accelerators.Processors.Implementation
 {
-    public class TelegramProcessor : IProcessor
+    public class TelegramProcessor : ProcessorBase
     {
-        private readonly WinApiWrapper _winApi;
+        protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        public TelegramProcessor(WinApiWrapper winApi)
+        public TelegramProcessor() : base(new WindowActions(), new ModeContext())
         {
-            _winApi = winApi;
-        }
-
-        public void Process(IntPtr hwnd)
-        {
-            var chain =
-             new ChatDown(
-              new ChatUp(
-               new Down(
-                new Escape(
-                 new Exit(
-                  new Minimize(
-                   new Minimize2(
-                    new Move(
-                     new Size(
-                      new ToPageBottom(
-                       new ToPageTop(
-                        new Up(
-                         new Maximize()))))))))))));
-
-            chain.Handle(hwnd, _winApi);
+            StateHandlerDictionary = new Dictionary<Type, HandlerBase>
+            {
+                { typeof(NormalState),
+                              new ChatBelow(
+                               new ChatAbove(
+                                new WheelDown(
+                                 new Escape(
+                                  new Exit(
+                                   new Minimize(
+                                    new Minimize(
+                                     new Move(
+                                      new Size(
+                                       new ToPageBottom(
+                                        new ToPageTop(
+                                         new WheelUp(
+                                          new Maximize())))))))))))) }
+            };
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Accelerators.Handlers;
-using Accelerators.Handlers.FileExplorer.Modes;
+using Accelerators.Modes;
 using SMMTool.Utils.WindowsApi;
 using static SMMTool.Utils.WindowsApi.WinApi;
 
@@ -7,26 +7,28 @@ namespace Accelerators.FileExplorer.Modes.Normal
 {
     public class GoToVisualMode : HandlerBase
     {
+        private readonly ModeContext _modeContext;
 
-        public GoToVisualMode() { }
-        public GoToVisualMode(IHandler next) : base(next) { }
+        public GoToVisualMode(ModeContext modeContext)
+        {
+            _modeContext = modeContext;
+        }
 
-
+        public GoToVisualMode(ModeContext modeContext, IHandler next) : base(next)
+        {
+            _modeContext = modeContext;
+        }
         protected override VirtualKey[] AcceleratorKeys => new[]
         {
             VirtualKey.V_key
         };
 
 
-        protected override void SendKeys(IntPtr hwnd, WinApiWrapper winApi)
+        protected override void SendKeys(Window window)
         {
-            winApi
-           .Wait(100)
-           .SendKeyDown(VirtualKey.VK_CONTROL)
-           .SendKey(VirtualKey.F_key)
-           .SendKeyUp(VirtualKey.VK_CONTROL);
+            actions.Press(VirtualKey.VK_SHIFT);
 
-            ModeContext.Instance.UpdateState(new VisualState());
+            _modeContext.UpdateState(new VisualState());
         }
 
     }
