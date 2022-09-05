@@ -1,4 +1,5 @@
-﻿using Accelerators.Processors.Implementation;
+﻿using Accelerators.Processors.POCO;
+using Accelerators.Processors.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,24 +9,22 @@ namespace Accelerators.Processors
 {
     public static class WindowProcessorHelper
     {
-
         private static Dictionary<IntPtr, WindowGeometry> WindowObjPool = new Dictionary<IntPtr, WindowGeometry>();
 
         public static void Process(
-            Dictionary<ProcessorBase, Func<IntPtr>> processorsDictionary,
+            IEnumerable<ProcessorHandle> processorsDictionary,
             IntPtr foregroundHwnd)
         {
             AddObjToPool(foregroundHwnd);
 
             processorsDictionary
-                .Where(kv => kv.Value() != IntPtr.Zero)
-                .Where(kv => kv.Value() == foregroundHwnd)
-                .Select(kv => kv.Key)
+                .Where(kv => kv.Handle.Value != IntPtr.Zero)
+                .Where(kv => kv.Handle.Value == foregroundHwnd)
+                .Select(kv => kv.Processor)
                 .DefaultIfEmpty(NullProcessor.Instance)
                 .Single()
                 .Process(WindowObjPool[foregroundHwnd]);
         }
-
 
         private static void AddObjToPool(IntPtr hwnd)
         {

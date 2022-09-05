@@ -1,6 +1,7 @@
 ﻿using Accelerators.Processors;
+using Accelerators.Processors.POCO;
+using Accelerators.Processors.POCO.Implementation;
 using Accelerators.Processors.Implementation;
-using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading.Tasks;
@@ -11,45 +12,47 @@ namespace WindowsService
     public partial class Service : ServiceBase
     {
 
-        private bool _cancelProcessing;
+        private bool _cancel;
 
-        private Dictionary<ProcessorBase, Func<IntPtr>> _processorsDictionary = new Dictionary<ProcessorBase, Func<IntPtr>>
-        {
-            { new FileExplorerProcessor(), () => WindowActions.GetWindowHandle("CabinetWClass") },
-            { new ViberProcessor(), () => WindowActions.GetWindowHandle("Qt624QWindowOwnDCIcon") },
-            { new TelegramProcessor(), () => WindowActions.GetWindowHandle("Qt5154QWindowIcon") },
-            { new AdobePdfProcessor(), () => WindowActions.GetWindowHandle("AcrobatSDIWindow") },
-            { new LibreOfficeProcessor(), () => WindowActions.GetWindowHandle("SALFRAME") },
-            { new ChromeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("chrome") },
-            { new SkypeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("skype") }
-        };
+        private readonly IEnumerable<ProcessorHandle> _processorHandleList =
+            new List<ProcessorHandle>
+            {
+                new ProcessorHandle(new FileExplorerProcessor(), new WndClass("CabinetWClass")),
+                new ProcessorHandle(new ViberProcessor(), new WndClass("Qt624QWindowOwnDCIcon")),
+                new ProcessorHandle(new TelegramProcessor(), new WndClass("Qt5154QWindowIcon")),
+                new ProcessorHandle(new AdobePdfProcessor(), new WndClass("AcrobatSDIWindow")),
+                new ProcessorHandle(new LibreOfficeProcessor(), new WndClass("SALFRAME")),
+                new ProcessorHandle(new ChromeProcessor(), new ProcessName("chrome")),
+                new ProcessorHandle(new SkypeProcessor(), new ProcessName("skype")),
+            };
 
         public Service()
         {
             InitializeComponent();
 
-            _cancelProcessing = false;
+            _cancel = false;
         }
 
         protected override void OnStart(string[] args)
         {
-            Task.Run(() => Processing(_processorsDictionary));
+            Task.Run(() => Processing(_processorHandleList));
 
             EventLog.WriteEntry("HotKeys started.");
         }
 
         protected override void OnStop()
         {
-            _cancelProcessing = true;
+            _cancel = true;
+
             EventLog.WriteEntry("HotKeys stopped.");
         }
 
-        private void Processing(Dictionary<ProcessorBase, Func<IntPtr>> processorsDictionary)
+        private void Processing(IEnumerable<ProcessorHandle> processorHandleList)
         {
-            while (_cancelProcessing)
+            while (_cancel)
             {
                 WindowProcessorHelper.Process(
-                                        processorsDictionary,
+                                        processorHandleList,
                                         WindowActions.ForegroundWindowHandle);
             }
         }

@@ -1,6 +1,7 @@
 ﻿using Accelerators.Processors;
+using Accelerators.Processors.POCO;
+using Accelerators.Processors.POCO.Implementation;
 using Accelerators.Processors.Implementation;
-using System;
 using System.Collections.Generic;
 using Utils.Window;
 
@@ -8,24 +9,24 @@ namespace ConsoleApp
 {
     class Program
     {
-        private static readonly Dictionary<ProcessorBase, Func<IntPtr>> _processorsDictionary =
-            new Dictionary<ProcessorBase, Func<IntPtr>>
+        private static readonly IEnumerable<ProcessorHandle> _processorHandleList =
+            new List<ProcessorHandle>
             {
-                { new FileExplorerProcessor(), () => WindowActions.GetWindowHandle("CabinetWClass") },
-                { new ViberProcessor(), () => WindowActions.GetWindowHandle("Qt624QWindowOwnDCIcon") },
-                { new TelegramProcessor(), () => WindowActions.GetWindowHandle("Qt5154QWindowIcon") },
-                { new AdobePdfProcessor(), () => WindowActions.GetWindowHandle("AcrobatSDIWindow") },
-                { new LibreOfficeProcessor(), () => WindowActions.GetWindowHandle("SALFRAME") },
-                { new ChromeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("chrome") },
-                { new SkypeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("skype") }
+                new ProcessorHandle(new FileExplorerProcessor(), new WndClass("CabinetWClass")),
+                new ProcessorHandle(new ViberProcessor(), new WndClass("Qt624QWindowOwnDCIcon")),
+                new ProcessorHandle(new TelegramProcessor(), new WndClass("Qt5154QWindowIcon")),
+                new ProcessorHandle(new AdobePdfProcessor(), new WndClass("AcrobatSDIWindow")),
+                new ProcessorHandle(new LibreOfficeProcessor(), new WndClass("SALFRAME")),
+                new ProcessorHandle(new ChromeProcessor(), new ProcessName("chrome")),
+                new ProcessorHandle(new SkypeProcessor(), new ProcessName("skype")),
             };
 
         static void Main(string[] args)
         {
-            Processing(_processorsDictionary);
+            Processing(_processorHandleList);
         }
 
-        private static void Processing(Dictionary<ProcessorBase, Func<IntPtr>> processorsDictionary)
+        private static void Processing(IEnumerable<ProcessorHandle> processorsDictionary)
         {
             while (true)
             {
