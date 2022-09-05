@@ -1,6 +1,8 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.Skype.Modes.Normal;
 using Accelerators.Modes.Implementation;
+using System;
+using System.Collections.Generic;
 
 namespace Accelerators.Processors.Implementation
 {
@@ -8,7 +10,7 @@ namespace Accelerators.Processors.Implementation
     {
         protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
-        public SkypeProcessor() 
+        public SkypeProcessor()
         {
             StateHandlerDictionary = new Dictionary<Type, HandlerBase>
             {

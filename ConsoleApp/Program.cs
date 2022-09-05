@@ -1,16 +1,15 @@
 ﻿using Accelerators.Processors;
 using Accelerators.Processors.Implementation;
+using System;
+using System.Collections.Generic;
 using Utils.Window;
 
-namespace Accelerators
+namespace ConsoleApp
 {
-    public class Program
+    class Program
     {
-        private static readonly Dictionary<ProcessorBase, Func<IntPtr>> _processorsDictionary;
-
-        static Program()
-        { 
-            _processorsDictionary = new Dictionary<ProcessorBase, Func<IntPtr>>
+        private static readonly Dictionary<ProcessorBase, Func<IntPtr>> _processorsDictionary =
+            new Dictionary<ProcessorBase, Func<IntPtr>>
             {
                 { new FileExplorerProcessor(), () => WindowActions.GetWindowHandle("CabinetWClass") },
                 { new ViberProcessor(), () => WindowActions.GetWindowHandle("Qt624QWindowOwnDCIcon") },
@@ -20,17 +19,20 @@ namespace Accelerators
                 { new ChromeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("chrome") },
                 { new SkypeProcessor(), () => WindowActions.GetHandleOfForegroundProcess("skype") }
             };
+
+        static void Main(string[] args)
+        {
+            Processing(_processorsDictionary);
         }
 
-        public static void Main(string[] args)
+        private static void Processing(Dictionary<ProcessorBase, Func<IntPtr>> processorsDictionary)
         {
             while (true)
             {
                 WindowProcessorHelper.Process(
-                                        _processorsDictionary,
+                                        processorsDictionary,
                                         WindowActions.ForegroundWindowHandle);
             }
         }
-
     }
 }

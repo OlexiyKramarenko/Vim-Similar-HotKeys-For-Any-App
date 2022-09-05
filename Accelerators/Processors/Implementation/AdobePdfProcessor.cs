@@ -2,6 +2,8 @@
 using Accelerators.Handlers.AdobePdfReader.Modes.Insert;
 using Accelerators.Handlers.AdobePdfReader.Modes.Normal;
 using Accelerators.Modes.Implementation;
+using System;
+using System.Collections.Generic;
 
 namespace Accelerators.Processors.Implementation
 {

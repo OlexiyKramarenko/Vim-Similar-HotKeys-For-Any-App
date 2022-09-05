@@ -1,4 +1,5 @@
-﻿using Utils.WinApi;
+﻿using System;
+using Utils.WinApi;
 using Utils.Window;
 
 namespace Utils.Handlers

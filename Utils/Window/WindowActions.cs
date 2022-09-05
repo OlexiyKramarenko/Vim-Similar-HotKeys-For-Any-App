@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading;
 using Utils.WinApi;
 using static Utils.WinApi.WinApi;
 
@@ -11,7 +13,7 @@ namespace Utils.Window
         public static IntPtr GetWindowHandle(string className)
         {
             return FindWindowA(className, null);
-        } 
+        }
 
         public WindowActions MovePointer(Point coords)
         {
@@ -51,6 +53,7 @@ namespace Utils.Window
         {
             KeyDown(key);
             KeyUp(key);
+
             return this;
         }
 
@@ -111,7 +114,7 @@ namespace Utils.Window
             return this;
         }
 
-        public static IntPtr ForegroundWindowHandle => GetForegroundWindow(); 
+        public static IntPtr ForegroundWindowHandle => GetForegroundWindow();
 
         public static IntPtr GetHandleOfForegroundProcess(string processName)
         {
@@ -164,26 +167,6 @@ namespace Utils.Window
             WinApi.WinApi.mouse_event(up | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, dx, dy, 0, UIntPtr.Zero);
         }
 
-        private int XScreenToWindow(int screenX)
-        {
-            int sx = GetSystemMetrics(SM_CXSCREEN);
-            int windowX = screenX * 65536 / sx;
-            return windowX;
-        }
-
-        private int YScreenToWindow(int screenY)
-        {
-            int sy = GetSystemMetrics(SM_CYSCREEN);
-            int windowY = screenY * 65536 / sy;
-            return windowY;
-        }
-
-        private Rect GetWindowRect(IntPtr hwnd)
-        {
-            var rect = new WinApi.WinApi.Rect();
-            WinApi.WinApi.GetWindowRect(hwnd, ref rect);
-            return rect;
-        }
 
         private static Process GetForegroundProcess()
         {

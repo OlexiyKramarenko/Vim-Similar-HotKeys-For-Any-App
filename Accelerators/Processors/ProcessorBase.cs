@@ -1,5 +1,7 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Modes;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Utils.WinApi;
 using Utils.Window;
@@ -14,7 +16,6 @@ namespace Accelerators.Processors
         {
             ModeContext = new ModeContext();
         }
-
 
         protected abstract Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
@@ -35,12 +36,7 @@ namespace Accelerators.Processors
               .ShowTooltip(TooltipLocation(window));
         }
 
-        private Point TooltipLocation(WindowGeometry geometry)
-        {
-            var x = geometry.LeftX;
-            var y = geometry.BottomY;
-            return new Point(x + 5, y - 6);
-        }
+        private Point TooltipLocation(WindowGeometry geometry) => new Point(geometry.LeftX + 5, geometry.BottomY - 6);
 
     }
 }

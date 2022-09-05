@@ -1,6 +1,8 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.Chrome.Modes.Normal;
 using Accelerators.Modes.Implementation;
+using System;
+using System.Collections.Generic;
 
 namespace Accelerators.Processors.Implementation
 {

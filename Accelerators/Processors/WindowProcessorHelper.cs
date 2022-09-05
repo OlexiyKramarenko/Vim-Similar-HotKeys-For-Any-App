@@ -1,4 +1,7 @@
 ﻿using Accelerators.Processors.Implementation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Utils.Window;
 
 namespace Accelerators.Processors

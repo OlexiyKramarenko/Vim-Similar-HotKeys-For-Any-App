@@ -4,6 +4,6 @@ namespace Accelerators.Handlers
 {
     public interface IHandler
     {
-        public void Handle(WindowGeometry window);
+        void Handle(WindowGeometry window);
     }
 }

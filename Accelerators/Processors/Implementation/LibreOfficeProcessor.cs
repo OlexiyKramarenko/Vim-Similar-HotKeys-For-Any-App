@@ -1,7 +1,8 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Handlers.LibreOffice.Modes.Normal;
 using Accelerators.Modes.Implementation;
-using Utils.Window;
+using System;
+using System.Collections.Generic;
 
 namespace Accelerators.Processors.Implementation
 {

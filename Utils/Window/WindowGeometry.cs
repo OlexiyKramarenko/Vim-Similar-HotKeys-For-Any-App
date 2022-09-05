@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using static Utils.WinApi.WinApi;
 
 namespace Utils.Window
@@ -39,10 +40,6 @@ namespace Utils.Window
            new Point(CursorScreenPosition.X - LeftX, CursorScreenPosition.Y - TopY);
 
 
-        //public Point InCurrentPosition => 
-        //   new Point(CursorScreenPosition.X, CursorScreenPosition.Y);
-
-
         public int Width => RightX - LeftX;
         public int Height => BottomY - TopY;
         public int BottomY => GetWindowRect(Hwnd).Bottom;
@@ -72,6 +69,20 @@ namespace Utils.Window
             var rect = new Rect();
             WinApi.WinApi.GetWindowRect(hwnd, ref rect);
             return rect;
+        }
+
+        private int XScreenToWindow(int screenX)
+        {
+            int sx = GetSystemMetrics(SM_CXSCREEN);
+            int windowX = screenX * 65536 / sx;
+            return windowX;
+        }
+
+        private int YScreenToWindow(int screenY)
+        {
+            int sy = GetSystemMetrics(SM_CYSCREEN);
+            int windowY = screenY * 65536 / sy;
+            return windowY;
         }
 
         #endregion

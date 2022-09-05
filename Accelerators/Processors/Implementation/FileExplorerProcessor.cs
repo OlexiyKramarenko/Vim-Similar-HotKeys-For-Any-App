@@ -1,5 +1,7 @@
 ﻿using Accelerators.Handlers;
 using Accelerators.Modes.Implementation;
+using System;
+using System.Collections.Generic;
 using Utils.Window;
 using Find = Accelerators.FileExplorer.Modes.Find;
 using Insert = Accelerators.FileExplorer.Modes.Insert;

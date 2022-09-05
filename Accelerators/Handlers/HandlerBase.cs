@@ -1,6 +1,7 @@
 ﻿using Utils.Handlers;
 using Utils.WinApi;
 using Utils.Window;
+using System.Linq;
 
 namespace Accelerators.Handlers
 {
