@@ -27,9 +27,11 @@ namespace Accelerators.Processors.Implementation
                                            new Extensions(
                                             new History(
                                              new NextTab(
-                                              new PinTab(
-                                               new PrevTab(
-                                                new ReopenClosedTab())))))))))))))
+                                              new Minimize(
+                                               new Maximize(
+                                                 new PinTab(
+                                                  new PrevTab(
+                                                   new ReopenClosedTab())))))))))))))))
                 }
             };
         }
