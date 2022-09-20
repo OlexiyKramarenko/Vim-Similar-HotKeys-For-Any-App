@@ -10,9 +10,14 @@ namespace Utils.Window
     public class WindowActions
     {
 
-        public static IntPtr GetWindowHandle(string className)
+        public static IntPtr GetWindowHandleByClassName(string className)
         {
             return FindWindowA(className, null);
+        }
+
+        public static IntPtr GetWindowHandleByCaption(string captionName)
+        {
+            return FindWindowA(null, captionName);
         }
 
         public WindowActions MovePointer(Point coords)
@@ -125,7 +130,7 @@ namespace Utils.Window
                 return IntPtr.Zero;
             }
 
-            if (process.ProcessName.ToLower() == processName.ToLower())
+            if (process.ProcessName.ToLower().Replace(" ", "").Contains(processName.ToLower()))
             {
                 return process.MainWindowHandle;
             }

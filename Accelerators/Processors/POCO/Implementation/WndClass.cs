@@ -12,6 +12,6 @@ namespace Accelerators.Processors.POCO.Implementation
             Name = name;
         }
 
-        public IntPtr Value => WindowActions.GetWindowHandle(Name);
+        public IntPtr Value => WindowActions.GetWindowHandleByClassName(Name);
     }
 }

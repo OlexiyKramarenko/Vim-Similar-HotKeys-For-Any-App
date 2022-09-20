@@ -19,6 +19,7 @@ namespace ConsoleApp
                 new ProcessorHandle(new LibreOfficeProcessor(), new WndClass("SALFRAME")),
                 new ProcessorHandle(new ChromeProcessor(), new ProcessName("chrome")),
                 new ProcessorHandle(new SkypeProcessor(), new ProcessName("skype")),
+                new ProcessorHandle(new VisualStudioProcessor(), new ProcessName("devenv")),
             };
 
         static void Main(string[] args)
