@@ -4,7 +4,7 @@ using Accelerators.Modes.Implementation;
 using Utils.Window;
 using Utils.WinApi;
 
-namespace Accelerators.FileExplorer.Modes.Normal
+namespace Accelerators.Handlers.FileExplorer.Modes.Normal
 {
     public class Find : HandlerBase
     {

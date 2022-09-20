@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Utils.Window;
 using Find = Accelerators.FileExplorer.Modes.Find;
 using Insert = Accelerators.FileExplorer.Modes.Insert;
-using Normal = Accelerators.FileExplorer.Modes.Normal;
+using Normal = Accelerators.Handlers.FileExplorer.Modes.Normal;
 using Visual = Accelerators.FileExplorer.Modes.Visual;
 
 namespace Accelerators.Processors.Implementation
@@ -15,7 +15,7 @@ namespace Accelerators.Processors.Implementation
         protected override Dictionary<Type, HandlerBase> StateHandlerDictionary { get; }
 
         public FileExplorerProcessor()
-        { 
+        {
             StateHandlerDictionary = new Dictionary<Type, HandlerBase>
             {
                 { typeof(VisualState), new Visual.Escape(ModeContext) },
@@ -50,7 +50,8 @@ namespace Accelerators.Processors.Implementation
                                         new Normal.MoveUp(
                                         new Normal.Paste(
                                         new Normal.Redo(
-                                        new Normal.Undo())))))))))))))))))))))))) },
+                                        new Normal.Undo(
+                                        new Normal.Quit()))))))))))))))))))))))))) },
             };
         }
 
