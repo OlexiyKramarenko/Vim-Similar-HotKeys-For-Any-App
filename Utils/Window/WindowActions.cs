@@ -21,15 +21,15 @@ namespace Utils.Window
             return this;
         }
 
-        public WindowActions RightClick(Point func)
+        public WindowActions RightClick(Point coords)
         {
-            MouseClick(func.X, func.Y, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
+            MouseClick(coords.X, coords.Y, MOUSEEVENTF_RIGHTDOWN, MOUSEEVENTF_RIGHTUP);
             return this;
         }
 
-        public WindowActions LeftClick(Point func)
+        public WindowActions LeftClick(Point coords)
         {
-            MouseClick(func.X, func.Y, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
+            MouseClick(coords.X, coords.Y, MOUSEEVENTF_LEFTDOWN, MOUSEEVENTF_LEFTUP);
             return this;
         }
 
@@ -147,26 +147,30 @@ namespace Utils.Window
             return this;
         }
 
-        private void MouseMove(int x, int y)
-        {
-            int sx = GetSystemMetrics(SM_CXSCREEN);
-            int sy = GetSystemMetrics(SM_CYSCREEN);
-            int dx = x * 65536 / sx;
-            int dy = y * 65536 / sy;
-            mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, dx, dy, dwData: 0, UIntPtr.Zero);
-        }
+        private void MouseMove(int x, int y) =>
+            mouse_event(MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, GetDeltaX(x), GetDeltaY(y), dwData: 0, UIntPtr.Zero);
+
 
         private void MouseClick(int x, int y, uint down, uint up)
         {
-            int sx = GetSystemMetrics(SM_CXSCREEN);
-            int sy = GetSystemMetrics(SM_CYSCREEN);
-            int dx = x * 65536 / sx;
-            int dy = y * 65536 / sy;
-            WinApi.WinApi.mouse_event(down | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, dx, dy, 0, UIntPtr.Zero);
+            WinApi.WinApi.mouse_event(down | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, GetDeltaX(x), GetDeltaY(y), 0, UIntPtr.Zero);
             Thread.Sleep(400);
-            WinApi.WinApi.mouse_event(up | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, dx, dy, 0, UIntPtr.Zero);
+            WinApi.WinApi.mouse_event(up | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE, GetDeltaX(x), GetDeltaY(y), 0, UIntPtr.Zero);
         }
 
+        private static int GetDeltaX(int x)
+        {
+            int sx = GetSystemMetrics(SM_CXSCREEN);
+            int dx = x * 65536 / sx;
+            return dx;
+        }
+
+        private static int GetDeltaY(int y)
+        {
+            int sy = GetSystemMetrics(SM_CYSCREEN);
+            int dy = y * 65536 / sy;
+            return dy;
+        }
 
         private static Process GetForegroundProcess()
         {

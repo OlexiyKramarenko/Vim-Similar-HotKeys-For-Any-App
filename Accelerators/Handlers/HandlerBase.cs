@@ -7,7 +7,6 @@ namespace Accelerators.Handlers
 {
     public abstract class HandlerBase : IHandler
     {
-        private readonly DoubleKeyPressHandler _twiceKeyPressHandler;
         private readonly IHandler _nextHandler;
 
         protected WindowActions Actions { get; }
@@ -18,18 +17,18 @@ namespace Accelerators.Handlers
         {
             _nextHandler = nextHandler;
             Actions = new WindowActions();
-            _twiceKeyPressHandler = new DoubleKeyPressHandler();
         }
 
-        public HandlerBase() : this(NullHandler.Instance) { } 
+        public HandlerBase() : this(NullHandler.Instance) { }
 
         public void Handle(WindowGeometry window)
         {
-            if (RequestShouldBeProcessed(Actions))
+            if (RequestShouldBeProcessed())
             {
                 if (KeyWasPressedTwice())
                 {
-                    _twiceKeyPressHandler.Handle(SendKeys, window, AcceleratorKeys.First());
+                    new DoubleKeyPressHandler()
+                        .Handle(SendKeys, window, AcceleratorKeys.First());
                 }
                 else
                 {
@@ -42,8 +41,8 @@ namespace Accelerators.Handlers
             }
         }
 
-        private bool RequestShouldBeProcessed(WindowActions actions) =>
-            AcceleratorKeys.All(k => actions.KeyIsPressed(k));
+        private bool RequestShouldBeProcessed() =>
+            AcceleratorKeys.All(k => Actions.KeyIsPressed(k));
 
         private bool KeyWasPressedTwice() =>
             AcceleratorKeys.Count() == 2 &&

@@ -24,18 +24,21 @@ namespace Accelerators.Processors.Implementation
                               new EndOfTheWord(
                                new Escape(
                                 new Highlight(
-                                 new MoveDown(
-                                  new MoveLeft(
-                                   new MoveRight(
-                                     new MoveUp(
-                                      new CloseTreeNode(
-                                       new PageDown(
-                                        new PageUp(
-                                         new PrevWord(
-                                          new StartOfLine(
-                                           new StartOfTheWord(
-                                            new ToTheBottomOfPage(
-                                             new ToTheTopOfPage()))))))))))))))))) },
+                                 new Minimize(
+                                  new Maximize(
+                                   new MoveWindow(
+                                     new MoveDown(
+                                      new MoveLeft(
+                                       new MoveRight(
+                                         new MoveUp(
+                                          new CloseTreeNode(
+                                           new PageDown(
+                                            new PageUp(
+                                             new PrevWord(
+                                              new StartOfLine(
+                                               new StartOfTheWord(
+                                                new ToTheBottomOfPage(
+                                                 new ToTheTopOfPage())))))))))))))))))))) },
             };
         }
     }
